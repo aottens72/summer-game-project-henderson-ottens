@@ -1,3 +1,4 @@
+import org.apache.tools.ant.taskdefs.condition.Os
 sourceCompatibility = 1.7
 sourceSets.main.java.srcDirs = [ "src/" ]
 sourceSets.main.resources.srcDirs = ["../core/assets"]
@@ -6,7 +7,10 @@ project.ext.mainClassName = "com.hendersonottens.nordsolldeep.desktop.DesktopLau
 project.ext.assetsDir = new File("../core/assets")
 
 task run(dependsOn: classes, type: JavaExec) {
-    //jvmArgs = ['-XstartOnFirstThread'];
+    //checks for macOS to add necessary line
+    if(Os.isFamily(Os.FAMILY_MAC)){
+        jvmArgs = ['-XstartOnFirstThread'];
+    }
     main = project.mainClassName
     classpath = sourceSets.main.runtimeClasspath
     standardInput = System.in
