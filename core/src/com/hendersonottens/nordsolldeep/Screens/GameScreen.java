@@ -4,12 +4,10 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.hendersonottens.nordsolldeep.Map;
 
 public class GameScreen implements Screen {
     private Stage stage;
     private Game game;
-    private Map map;
     public GameScreen(Game aGame) {
         game = aGame;
         stage = new Stage(new ScreenViewport());
