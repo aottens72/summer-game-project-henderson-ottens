@@ -2,7 +2,9 @@ package com.hendersonottens.nordsolldeep.Screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -37,12 +39,28 @@ public class GameScreen implements Screen {
     public void show() {
         Gdx.gl.glClearColor(0,0,1,1);
     }
+    private void cameraController(Camera camera){
 
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+            camera.translate(0, 10, 0);
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+            camera.translate(0, -10, 0);
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+            camera.translate(-10, 0, 0);
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+            camera.translate(10, 0, 0);
+        }
+    }
     @Override
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         tiledMapRenderer.setView(camera);
         tiledMapRenderer.render();
+        //camera.position.set(0, 0, 0);
+        cameraController(camera);
     }
 
     @Override
