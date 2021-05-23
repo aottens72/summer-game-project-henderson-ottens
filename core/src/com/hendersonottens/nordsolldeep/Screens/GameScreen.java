@@ -29,7 +29,7 @@ public class GameScreen implements Screen {
 
 
 
-        map = new TmxMapLoader().load("map1.tmx");
+        map = new TmxMapLoader().load("maps/map1.tmx");
 
         tiledMapRenderer = new OrthogonalTiledMapRenderer(map);
 
