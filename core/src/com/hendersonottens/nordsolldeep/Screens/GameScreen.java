@@ -66,7 +66,7 @@ public class GameScreen implements Screen {
         tiledMapRenderer.render();
         if(flag){
             flag = false;
-            camera.position.set(200, 200, 0);
+            camera.position.set(250, 500, 0);
             camera.update();
         }
         cameraController(camera);
