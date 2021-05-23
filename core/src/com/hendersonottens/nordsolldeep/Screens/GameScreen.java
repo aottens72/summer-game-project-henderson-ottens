@@ -20,6 +20,7 @@ public class GameScreen implements Screen {
     private TiledMap map;
     private OrthographicCamera camera;
     private OrthogonalTiledMapRenderer tiledMapRenderer;
+    private boolean flag = true;
 
     public GameScreen(Game aGame) {
         game = aGame;
@@ -39,19 +40,23 @@ public class GameScreen implements Screen {
     public void show() {
         Gdx.gl.glClearColor(0,0,1,1);
     }
-    private void cameraController(Camera camera){
+    private void cameraController(Camera aCamera){
 
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            camera.translate(0, 10, 0);
+            aCamera.translate(0, 10, 0);
+            aCamera.update();
         }
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            camera.translate(0, -10, 0);
+            aCamera.translate(0, -10, 0);
+            aCamera.update();
         }
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            camera.translate(-10, 0, 0);
+            aCamera.translate(-10, 0, 0);
+            aCamera.update();
         }
         if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            camera.translate(10, 0, 0);
+            aCamera.translate(10, 0, 0);
+            aCamera.update();
         }
     }
     @Override
@@ -59,8 +64,13 @@ public class GameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         tiledMapRenderer.setView(camera);
         tiledMapRenderer.render();
-        //camera.position.set(0, 0, 0);
+        if(flag){
+            flag = false;
+            camera.position.set(200, 200, 0);
+            camera.update();
+        }
         cameraController(camera);
+        //camera.update();
     }
 
     @Override
