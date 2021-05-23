@@ -23,11 +23,12 @@ public class GameScreen implements Screen {
         game = aGame;
         stage = new Stage(new ScreenViewport());
 
-        //problem locate, something to do with map loading
 
-        //map = new TmxMapLoader().load("map1.tmx");
 
-        //tiledMapRenderer = new OrthogonalTiledMapRenderer(map);
+
+        map = new TmxMapLoader().load("map1.tmx");
+
+        tiledMapRenderer = new OrthogonalTiledMapRenderer(map);
 
         camera = new OrthographicCamera();
     }
@@ -40,8 +41,8 @@ public class GameScreen implements Screen {
     @Override
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        //tiledMapRenderer.setView(camera);
-        //tiledMapRenderer.render();
+        tiledMapRenderer.setView(camera);
+        tiledMapRenderer.render();
     }
 
     @Override
