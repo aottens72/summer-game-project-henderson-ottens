@@ -43,19 +43,19 @@ public class GameScreen implements Screen {
     private void cameraController(Camera aCamera){
 
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            aCamera.translate(0, 10, 0);
+            aCamera.translate(0, 3, 0);
             aCamera.update();
         }
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            aCamera.translate(0, -10, 0);
+            aCamera.translate(0, -3, 0);
             aCamera.update();
         }
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            aCamera.translate(-10, 0, 0);
+            aCamera.translate(-3, 0, 0);
             aCamera.update();
         }
         if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            aCamera.translate(10, 0, 0);
+            aCamera.translate(3, 0, 0);
             aCamera.update();
         }
     }
