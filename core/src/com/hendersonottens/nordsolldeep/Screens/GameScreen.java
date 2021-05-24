@@ -38,7 +38,7 @@ public class GameScreen implements Screen {
         camera = new OrthographicCamera();
         batch = new SpriteBatch();
         sprite = new Sprite(new Texture("player.png"));
-        sprite.setBounds(250, 500, 32, 32);
+        sprite.setBounds(50, 610, 32, 32);
     }
 
     @Override
