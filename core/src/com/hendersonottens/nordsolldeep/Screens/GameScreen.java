@@ -47,24 +47,24 @@ public class GameScreen implements Screen {
     }
     private void cameraController(Camera aCamera, Sprite playerSprite){
 
-        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
             aCamera.translate(0, 10, 0);
-            playerSprite.setPosition(playerSprite.getX(), playerSprite.getY()+10);
+            playerSprite.setPosition(playerSprite.getX(), playerSprite.getY()+20);
             aCamera.update();
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
             aCamera.translate(0, -10, 0);
-            playerSprite.setPosition(playerSprite.getX(), playerSprite.getY()-10);
+            playerSprite.setPosition(playerSprite.getX(), playerSprite.getY()-20);
             aCamera.update();
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
             aCamera.translate(-10, 0, 0);
-            playerSprite.setPosition(playerSprite.getX() -10, playerSprite.getY());
+            playerSprite.setPosition(playerSprite.getX() -20, playerSprite.getY());
             aCamera.update();
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
             aCamera.translate(10, 0, 0);
-            playerSprite.setPosition(playerSprite.getX()+10, playerSprite.getY());
+            playerSprite.setPosition(playerSprite.getX()+20, playerSprite.getY());
             aCamera.update();
         }
     }
@@ -80,9 +80,9 @@ public class GameScreen implements Screen {
             camera.position.set(250, 500, 0);
             camera.update();
         }
-        cameraController(camera, sprite);
         batch.begin();
         sprite.draw(batch);
+        cameraController(camera, sprite);
         batch.end();
 
         //camera.update();
