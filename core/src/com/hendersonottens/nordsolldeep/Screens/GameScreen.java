@@ -38,7 +38,7 @@ public class GameScreen implements Screen {
         camera = new OrthographicCamera();
         batch = new SpriteBatch();
         sprite = new Sprite(new Texture("player.png"));
-        sprite.setBounds(50, 610, 32, 32);
+        sprite.setBounds(64, 608, 32, 32);
     }
 
     @Override
@@ -48,23 +48,23 @@ public class GameScreen implements Screen {
     private void cameraController(Camera aCamera, Sprite playerSprite){
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
-            aCamera.translate(0, 10, 0);
-            playerSprite.setPosition(playerSprite.getX(), playerSprite.getY()+20);
+            aCamera.translate(0, 32, 0);
+            playerSprite.setPosition(playerSprite.getX(), playerSprite.getY()+32);
             aCamera.update();
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
-            aCamera.translate(0, -10, 0);
-            playerSprite.setPosition(playerSprite.getX(), playerSprite.getY()-20);
+            aCamera.translate(0, -32, 0);
+            playerSprite.setPosition(playerSprite.getX(), playerSprite.getY()-32);
             aCamera.update();
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
-            aCamera.translate(-10, 0, 0);
-            playerSprite.setPosition(playerSprite.getX() -20, playerSprite.getY());
+            aCamera.translate(-32, 0, 0);
+            playerSprite.setPosition(playerSprite.getX() -32, playerSprite.getY());
             aCamera.update();
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
-            aCamera.translate(10, 0, 0);
-            playerSprite.setPosition(playerSprite.getX()+20, playerSprite.getY());
+            aCamera.translate(32, 0, 0);
+            playerSprite.setPosition(playerSprite.getX()+32, playerSprite.getY());
             aCamera.update();
         }
     }
