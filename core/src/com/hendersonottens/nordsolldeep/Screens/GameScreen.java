@@ -11,13 +11,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.hendersonottens.nordsolldeep.GameRoot;
-import com.hendersonottens.nordsolldeep.SpriteActor;
 
 public class GameScreen implements Screen {
     private Stage stage;
@@ -41,7 +38,7 @@ public class GameScreen implements Screen {
         camera = new OrthographicCamera();
         batch = new SpriteBatch();
         sprite = new Sprite(new Texture("player.png"));
-        sprite.setBounds(250, 500, sprite.getWidth(), sprite.getHeight());
+        sprite.setBounds(250, 500, 32, 32);
     }
 
     @Override
