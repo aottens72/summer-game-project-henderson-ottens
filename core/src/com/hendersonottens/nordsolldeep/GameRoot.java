@@ -1,19 +1,15 @@
 package com.hendersonottens.nordsolldeep;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.hendersonottens.nordsolldeep.Screens.*;
+import com.hendersonottens.nordsolldeep.Screens.TitleScreen;
 
 public class GameRoot extends Game {
-	private SpriteBatch batch;
+	public SpriteBatch batch;
 	private Texture[][] map;
 
 	static public Skin gameSkin;
@@ -21,7 +17,7 @@ public class GameRoot extends Game {
 
 	@Override
 	public void create () {
-		//batch = new SpriteBatch();
+		batch = new SpriteBatch();
 		//stage = new Stage(new ScreenViewport());
 		//img = new Texture("badlogic.jpg");
 
