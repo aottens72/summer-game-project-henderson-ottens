@@ -45,22 +45,26 @@ public class GameScreen implements Screen {
     public void show() {
         Gdx.gl.glClearColor(0,0,1,1);
     }
-    private void cameraController(Camera aCamera){
+    private void cameraController(Camera aCamera, Sprite playerSprite){
 
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            aCamera.translate(0, 3, 0);
+            aCamera.translate(0, 10, 0);
+            playerSprite.setPosition(playerSprite.getX(), playerSprite.getY()+10);
             aCamera.update();
         }
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            aCamera.translate(0, -3, 0);
+            aCamera.translate(0, -10, 0);
+            playerSprite.setPosition(playerSprite.getX(), playerSprite.getY()-10);
             aCamera.update();
         }
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            aCamera.translate(-3, 0, 0);
+            aCamera.translate(-10, 0, 0);
+            playerSprite.setPosition(playerSprite.getX() -10, playerSprite.getY());
             aCamera.update();
         }
         if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            aCamera.translate(3, 0, 0);
+            aCamera.translate(10, 0, 0);
+            playerSprite.setPosition(playerSprite.getX()+10, playerSprite.getY());
             aCamera.update();
         }
     }
@@ -76,7 +80,7 @@ public class GameScreen implements Screen {
             camera.position.set(250, 500, 0);
             camera.update();
         }
-        cameraController(camera);
+        cameraController(camera, sprite);
         batch.begin();
         sprite.draw(batch);
         batch.end();
