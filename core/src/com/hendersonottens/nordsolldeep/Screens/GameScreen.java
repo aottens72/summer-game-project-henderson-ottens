@@ -10,11 +10,16 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.MapObjects;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.hendersonottens.nordsolldeep.Player;
 
 public class GameScreen implements Screen {
     private Stage stage;
@@ -24,7 +29,10 @@ public class GameScreen implements Screen {
     private OrthogonalTiledMapRenderer tiledMapRenderer;
     private boolean flag = true;
     private SpriteBatch batch;
-    private Sprite sprite;
+    //private Sprite sprite;
+    private Player player;
+    private MapLayer collisionLayer;
+    private MapObjects objects;
 
     public GameScreen(Game aGame) {
         game = aGame;
@@ -34,37 +42,68 @@ public class GameScreen implements Screen {
         map = new TmxMapLoader().load("maps/map1.tmx");
 
         tiledMapRenderer = new OrthogonalTiledMapRenderer(map);
+        collisionLayer = map.getLayers().get("Collision Layer");
+        objects = collisionLayer.getObjects();
 
         camera = new OrthographicCamera();
         batch = new SpriteBatch();
-        sprite = new Sprite(new Texture("player.png"));
+        Sprite sprite = new Sprite(new Texture("player.png"));
         sprite.setBounds(64, 608, 32, 32);
+        player = new Player(sprite);
     }
 
     @Override
     public void show() {
         Gdx.gl.glClearColor(0,0,1,1);
     }
-    private void cameraController(Camera aCamera, Sprite playerSprite){
+    private void cameraController(Camera aCamera){
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
+            player.rectangle.setY(player.rectangle.y+32);
+            for(RectangleMapObject object : objects.getByType(RectangleMapObject.class)){
+                if(player.rectangle.overlaps(object.getRectangle())){
+                    player.rectangle.setPosition(player.sprite.getX(), player.sprite.getY());
+                    return;
+                }
+            }
             aCamera.translate(0, 32, 0);
-            playerSprite.setPosition(playerSprite.getX(), playerSprite.getY()+32);
+            player.moveUp();
             aCamera.update();
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
+            player.rectangle.setY(player.rectangle.y-32);
+            for(RectangleMapObject object : objects.getByType(RectangleMapObject.class)){
+                if(player.rectangle.overlaps(object.getRectangle())){
+                    player.rectangle.setPosition(player.sprite.getX(), player.sprite.getY());
+                    return;
+                }
+            }
             aCamera.translate(0, -32, 0);
-            playerSprite.setPosition(playerSprite.getX(), playerSprite.getY()-32);
+            player.moveDown();
             aCamera.update();
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
+            player.rectangle.setX(player.rectangle.x-32);
+            for(RectangleMapObject object : objects.getByType(RectangleMapObject.class)){
+                if(player.rectangle.overlaps(object.getRectangle())){
+                    player.rectangle.setPosition(player.sprite.getX(),player.sprite.getY());
+                    return;
+                }
+            }
             aCamera.translate(-32, 0, 0);
-            playerSprite.setPosition(playerSprite.getX() -32, playerSprite.getY());
+            player.moveLeft();
             aCamera.update();
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
+            player.rectangle.setX(player.rectangle.x+32);
+            for(RectangleMapObject object : objects.getByType(RectangleMapObject.class)){
+                if(player.rectangle.overlaps(object.getRectangle())){
+                    player.rectangle.setPosition(player.sprite.getX(), player.sprite.getY());
+                    return;
+                }
+            }
             aCamera.translate(32, 0, 0);
-            playerSprite.setPosition(playerSprite.getX()+32, playerSprite.getY());
+            player.moveRight();
             aCamera.update();
         }
     }
@@ -81,8 +120,8 @@ public class GameScreen implements Screen {
             camera.update();
         }
         batch.begin();
-        sprite.draw(batch);
-        cameraController(camera, sprite);
+        player.sprite.draw(batch);
+        cameraController(camera);
         batch.end();
 
         //camera.update();
