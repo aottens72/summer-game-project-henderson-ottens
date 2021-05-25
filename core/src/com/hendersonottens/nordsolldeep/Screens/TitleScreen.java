@@ -35,6 +35,8 @@ public class TitleScreen implements Screen{
         playButton.addListener(new InputListener(){
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+                Screen curScreen = game.getScreen();
+                curScreen.dispose();
                 game.setScreen(new GameScreen(game));
             }
             @Override
@@ -50,6 +52,8 @@ public class TitleScreen implements Screen{
         optionsButton.addListener(new InputListener(){
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+                Screen curScreen = game.getScreen();
+                curScreen.dispose();
                 game.setScreen(new OptionScreen(game));
             }
             @Override
