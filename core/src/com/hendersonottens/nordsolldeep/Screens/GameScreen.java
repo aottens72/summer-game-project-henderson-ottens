@@ -58,6 +58,8 @@ public class GameScreen implements Screen {
 
         Array<Body> bodies = new Array<>();
         loadBodies(collisionLayer, bodies);
+        CollisionListener listener = new CollisionListener();
+        world.setContactListener(listener);
     }
 
     @Override
@@ -94,7 +96,7 @@ public class GameScreen implements Screen {
         bodies.add(playerBody);
         bodies.get(bodies.size - 1).createFixture(shape, 0);
     }
-    public class ListenerClass implements ContactListener {
+    public class CollisionListener implements ContactListener {
         @Override
         public void endContact(Contact contact) {
 
@@ -114,6 +116,7 @@ public class GameScreen implements Screen {
         public void beginContact(Contact contact) {
             playerBody.setTransform(player.rectangle.x, player.rectangle.y, 0);
             playerBody.setAwake(true);
+            System.out.print("collision");
         }
     };
     private void cameraController(Camera aCamera){
