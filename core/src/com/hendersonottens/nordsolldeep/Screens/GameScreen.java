@@ -38,7 +38,7 @@ public class GameScreen implements Screen {
     private MapLayer collisionLayer;
     private Body playerBody;
     //private MapObjects objects;
-    World world = new World(new Vector2(0, -10), true);
+    World world = new World(new Vector2(0, 0), true);
 
     public GameScreen(Game aGame) {
         game = aGame;
@@ -74,11 +74,11 @@ public class GameScreen implements Screen {
             if (object instanceof RectangleMapObject) {
                 Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
-                def.position.x = (rect.x + rect.width / 2) / 32;
-                def.position.y = (rect.y + rect.height / 2) / 32;
+                def.position.x = (rect.x + rect.width / 2);
+                def.position.y = (rect.y + rect.height / 2);
                 def.type = BodyDef.BodyType.StaticBody;
 
-                shape.setAsBox(rect.width / 2 / 32, rect.height / 2 / 32);
+                shape.setAsBox(rect.width / 2, rect.height / 2);
 
                 bodies.add(world.createBody(def));
                 bodies.get(bodies.size - 1).createFixture(shape, 0);
@@ -86,8 +86,8 @@ public class GameScreen implements Screen {
         }
         Rectangle rect = player.rectangle;
 
-        def.position.x = (rect.x + rect.width / 2) / 32;
-        def.position.y = (rect.y + rect.height / 2) / 32;
+        def.position.x = (rect.x + rect.width / 2);
+        def.position.y = (rect.y + rect.height / 2);
         def.type = BodyDef.BodyType.DynamicBody;
 
         shape.setAsBox(rect.width / 2 / 32, rect.height / 2 / 32);
@@ -183,6 +183,7 @@ public class GameScreen implements Screen {
     }
     @Override
     public void render(float delta) {
+        world.step(1/60f, 6, 2);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         tiledMapRenderer.setView(camera);
         tiledMapRenderer.render();
