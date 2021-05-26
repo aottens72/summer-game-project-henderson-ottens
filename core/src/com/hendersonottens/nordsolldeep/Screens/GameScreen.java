@@ -49,13 +49,14 @@ public class GameScreen implements Screen {
         tiledMapRenderer = new OrthogonalTiledMapRenderer(map);
         collisionLayer = map.getLayers().get("Collision Layer");
         //objects = collisionLayer.getObjects();
-        Array<Body> bodies = new Array<>();
-        loadBodies(collisionLayer, bodies);
         camera = new OrthographicCamera();
         batch = new SpriteBatch();
         Sprite sprite = new Sprite(new Texture("player.png"));
         sprite.setBounds(64, 608, 32, 32);
         player = new Player(sprite);
+
+        Array<Body> bodies = new Array<>();
+        loadBodies(collisionLayer, bodies);
     }
 
     @Override
