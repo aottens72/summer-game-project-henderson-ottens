@@ -124,21 +124,35 @@ public class GameScreen implements Screen {
         Vector2 pos = playerBody.getPosition();
 
         // apply left impulse
-        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+        if(Gdx.input.isKeyPressed(Input.Keys.A) && Gdx.input.isKeyPressed(Input.Keys.S)){
+            playerBody.applyLinearImpulse(-0.80f, -0.80f, pos.x, pos.y, true);
+        }
+        else if(Gdx.input.isKeyPressed(Input.Keys.A) && Gdx.input.isKeyPressed(Input.Keys.W)){
+            playerBody.applyLinearImpulse(-0.80f, 0.80f, pos.x, pos.y, true);
+        }
+        else if(Gdx.input.isKeyPressed(Input.Keys.D) && Gdx.input.isKeyPressed(Input.Keys.S)){
+            playerBody.applyLinearImpulse(0.80f, -0.80f, pos.x, pos.y, true);
+        }
+        else if(Gdx.input.isKeyPressed(Input.Keys.D) && Gdx.input.isKeyPressed(Input.Keys.W)){
+            playerBody.applyLinearImpulse(0.80f, 0.80f, pos.x, pos.y, true);
+        }
+        else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
             playerBody.applyLinearImpulse(-0.80f, 0, pos.x, pos.y, true);
         }
-
         // apply right impulse
-        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+        else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
             playerBody.applyLinearImpulse(0.80f, 0, pos.x, pos.y, true);
         }
         // apply up impulse
-        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+        else if (Gdx.input.isKeyPressed(Input.Keys.W)) {
             playerBody.applyLinearImpulse(0, 0.80f, pos.x, pos.y, true);
         }
         // apply down impulse
-        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+        else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
             playerBody.applyLinearImpulse(0, -0.80f, pos.x, pos.y, true);
+        }
+        else{
+            playerBody.setLinearVelocity(0f, 0f);
         }
 
        /* if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
