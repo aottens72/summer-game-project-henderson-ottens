@@ -114,70 +114,91 @@ public class GameScreen implements Screen {
 
         @Override
         public void beginContact(Contact contact) {
-            playerBody.setTransform(player.rectangle.x, player.rectangle.y, 0);
-            playerBody.setAwake(true);
+            //playerBody.setTransform(player.rectangle.x, player.rectangle.y, 0);
+            //playerBody.setAwake(true);
+            playerBody.setLinearVelocity(0f, 0f);
             System.out.print("collision");
         }
     };
     private void cameraController(Camera aCamera){
+        Vector2 pos = playerBody.getPosition();
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
+        // apply left impulse
+        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+            playerBody.applyLinearImpulse(-0.80f, 0, pos.x, pos.y, true);
+        }
+
+        // apply right impulse
+        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+            playerBody.applyLinearImpulse(0.80f, 0, pos.x, pos.y, true);
+        }
+        // apply up impulse
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+            playerBody.applyLinearImpulse(0, 0.80f, pos.x, pos.y, true);
+        }
+        // apply down impulse
+        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+            playerBody.applyLinearImpulse(0, -0.80f, pos.x, pos.y, true);
+        }
+
+       /* if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
             playerBody.setTransform(player.rectangle.x, player.rectangle.y+32, 0);
             playerBody.setAwake(true);
             //player.rectangle.setY(player.rectangle.y+32);
 
-            /*for(RectangleMapObject object : objects.getByType(RectangleMapObject.class)){
+            for(RectangleMapObject object : objects.getByType(RectangleMapObject.class)){
                 if(player.rectangle.overlaps(object.getRectangle())){
                     player.rectangle.setPosition(player.sprite.getX(), player.sprite.getY());
                     return;
                 }
-            }*/
+            }
             //aCamera.translate(0, 32, 0);
             //player.moveUp();
             //aCamera.update();
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
+        }*/
+        /*if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
             playerBody.setTransform(player.rectangle.x, player.rectangle.y-32, 0);
             playerBody.setAwake(true);
             //player.rectangle.setY(player.rectangle.y-32);
-            /*for(RectangleMapObject object : objects.getByType(RectangleMapObject.class)){
+            for(RectangleMapObject object : objects.getByType(RectangleMapObject.class)){
                 if(player.rectangle.overlaps(object.getRectangle())){
                     player.rectangle.setPosition(player.sprite.getX(), player.sprite.getY());
                     return;
                 }
-            }*/
+            }
             //aCamera.translate(0, -32, 0);
             //player.moveDown();
             //aCamera.update();
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
+        }*/
+        /*if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
             playerBody.setTransform(player.rectangle.x-32, player.rectangle.y, 0);
             playerBody.setAwake(true);
             //player.rectangle.setX(player.rectangle.x-32);
-            /*for(RectangleMapObject object : objects.getByType(RectangleMapObject.class)){
+            for(RectangleMapObject object : objects.getByType(RectangleMapObject.class)){
                 if(player.rectangle.overlaps(object.getRectangle())){
                     player.rectangle.setPosition(player.sprite.getX(),player.sprite.getY());
                     return;
                 }
-            }*/
+            }
             //aCamera.translate(-32, 0, 0);
             //player.moveLeft();
             //aCamera.update();
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
+        }*/
+        /*if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
             playerBody.setTransform(player.rectangle.x+32, player.rectangle.y, 0);
             playerBody.setAwake(true);
             //player.rectangle.setX(player.rectangle.x+32);
-            /*for(RectangleMapObject object : objects.getByType(RectangleMapObject.class)){
+            for(RectangleMapObject object : objects.getByType(RectangleMapObject.class)){
                 if(player.rectangle.overlaps(object.getRectangle())){
                     player.rectangle.setPosition(player.sprite.getX(), player.sprite.getY());
                     return;
                 }
-            }*/
+            }
             //aCamera.translate(32, 0, 0);
             //player.moveRight();
            //aCamera.update();
-        }
+        }*/
+
         aCamera.position.set(playerBody.getPosition().x, playerBody.getPosition().y, 0);
         aCamera.update();
     }
