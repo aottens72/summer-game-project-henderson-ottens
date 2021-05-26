@@ -112,59 +112,71 @@ public class GameScreen implements Screen {
 
         @Override
         public void beginContact(Contact contact) {
-            player.rectangle.setPosition(player.sprite.getX(), player.sprite.getY());
+            playerBody.setTransform(player.rectangle.x, player.rectangle.y, 0);
+            playerBody.setAwake(true);
         }
     };
     private void cameraController(Camera aCamera){
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
-            player.rectangle.setY(player.rectangle.y+32);
+            playerBody.setTransform(player.rectangle.x, player.rectangle.y+32, 0);
+            playerBody.setAwake(true);
+            //player.rectangle.setY(player.rectangle.y+32);
+
             /*for(RectangleMapObject object : objects.getByType(RectangleMapObject.class)){
                 if(player.rectangle.overlaps(object.getRectangle())){
                     player.rectangle.setPosition(player.sprite.getX(), player.sprite.getY());
                     return;
                 }
             }*/
-            aCamera.translate(0, 32, 0);
-            player.moveUp();
-            aCamera.update();
+            //aCamera.translate(0, 32, 0);
+            //player.moveUp();
+            //aCamera.update();
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
-            player.rectangle.setY(player.rectangle.y-32);
+            playerBody.setTransform(player.rectangle.x, player.rectangle.y-32, 0);
+            playerBody.setAwake(true);
+            //player.rectangle.setY(player.rectangle.y-32);
             /*for(RectangleMapObject object : objects.getByType(RectangleMapObject.class)){
                 if(player.rectangle.overlaps(object.getRectangle())){
                     player.rectangle.setPosition(player.sprite.getX(), player.sprite.getY());
                     return;
                 }
             }*/
-            aCamera.translate(0, -32, 0);
-            player.moveDown();
-            aCamera.update();
+            //aCamera.translate(0, -32, 0);
+            //player.moveDown();
+            //aCamera.update();
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
-            player.rectangle.setX(player.rectangle.x-32);
+            playerBody.setTransform(player.rectangle.x-32, player.rectangle.y, 0);
+            playerBody.setAwake(true);
+            //player.rectangle.setX(player.rectangle.x-32);
             /*for(RectangleMapObject object : objects.getByType(RectangleMapObject.class)){
                 if(player.rectangle.overlaps(object.getRectangle())){
                     player.rectangle.setPosition(player.sprite.getX(),player.sprite.getY());
                     return;
                 }
             }*/
-            aCamera.translate(-32, 0, 0);
-            player.moveLeft();
-            aCamera.update();
+            //aCamera.translate(-32, 0, 0);
+            //player.moveLeft();
+            //aCamera.update();
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
-            player.rectangle.setX(player.rectangle.x+32);
+            playerBody.setTransform(player.rectangle.x+32, player.rectangle.y, 0);
+            playerBody.setAwake(true);
+            //player.rectangle.setX(player.rectangle.x+32);
             /*for(RectangleMapObject object : objects.getByType(RectangleMapObject.class)){
                 if(player.rectangle.overlaps(object.getRectangle())){
                     player.rectangle.setPosition(player.sprite.getX(), player.sprite.getY());
                     return;
                 }
             }*/
-            aCamera.translate(32, 0, 0);
-            player.moveRight();
-            aCamera.update();
+            //aCamera.translate(32, 0, 0);
+            //player.moveRight();
+           //aCamera.update();
         }
+        aCamera.position.set(playerBody.getPosition().x, playerBody.getPosition().y, 0);
+        aCamera.update();
     }
     @Override
     public void render(float delta) {
@@ -178,6 +190,9 @@ public class GameScreen implements Screen {
             camera.position.set(250, 500, 0);
             camera.update();
         }
+        player.rectangle.setX(playerBody.getPosition().x);
+        player.rectangle.setY(playerBody.getPosition().y);
+        player.sprite.setPosition(playerBody.getPosition().x, playerBody.getPosition().y);
         batch.begin();
         player.sprite.draw(batch);
         cameraController(camera);
