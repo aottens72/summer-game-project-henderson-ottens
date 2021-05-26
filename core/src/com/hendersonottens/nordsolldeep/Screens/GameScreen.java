@@ -36,6 +36,7 @@ public class GameScreen implements Screen {
     //private Sprite sprite;
     private Player player;
     private MapLayer collisionLayer;
+    private Body playerBody;
     //private MapObjects objects;
     World world = new World(new Vector2(0, -10), true);
 
@@ -88,8 +89,9 @@ public class GameScreen implements Screen {
         def.type = BodyDef.BodyType.DynamicBody;
 
         shape.setAsBox(rect.width / 2 / 32, rect.height / 2 / 32);
-
-        bodies.add(world.createBody(def));
+        playerBody = world.createBody(def);
+        playerBody.setUserData(player.rectangle);
+        bodies.add(playerBody);
         bodies.get(bodies.size - 1).createFixture(shape, 0);
     }
     public class ListenerClass implements ContactListener {
