@@ -37,6 +37,7 @@ public class GameScreen implements Screen {
     private Player player;
     private MapLayer collisionLayer;
     private Body playerBody;
+    private Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
     //private MapObjects objects;
     World world = new World(new Vector2(0, 0), true);
 
@@ -90,7 +91,8 @@ public class GameScreen implements Screen {
         def.position.y = (rect.y + rect.height / 2);
         def.type = BodyDef.BodyType.DynamicBody;
 
-        shape.setAsBox(rect.width / 2 / 32, rect.height / 2 / 32);
+        shape.setAsBox(rect.width / 2 , rect.height / 2 );
+
         playerBody = world.createBody(def);
         playerBody.setUserData(player.rectangle);
         bodies.add(playerBody);
@@ -218,8 +220,9 @@ public class GameScreen implements Screen {
     }
     @Override
     public void render(float delta) {
-        world.step(1/60f, 6, 2);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        //debugRenderer.render(world, camera.combined);
+        world.step(1/60f, 6, 2);
         tiledMapRenderer.setView(camera);
         tiledMapRenderer.render();
         batch.setProjectionMatrix(camera.combined);
@@ -231,7 +234,7 @@ public class GameScreen implements Screen {
         }
         player.rectangle.setX(playerBody.getPosition().x);
         player.rectangle.setY(playerBody.getPosition().y);
-        player.sprite.setPosition(playerBody.getPosition().x, playerBody.getPosition().y);
+        player.sprite.setPosition(playerBody.getPosition().x - 20, playerBody.getPosition().y - 15);
         batch.begin();
         player.sprite.draw(batch);
         cameraController(camera);
