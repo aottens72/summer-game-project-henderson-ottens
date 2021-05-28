@@ -43,8 +43,7 @@ public class OptionScreen implements Screen {
         backButton.addListener(new InputListener(){
             @Override
             public void touchUp(InputEvent e, float x, float y, int pointer, int button) {
-                Screen curScreen = game.getScreen();
-                curScreen.dispose();
+                game.getScreen().dispose();
                 game.setScreen(new TitleScreen(game));
             }
 
