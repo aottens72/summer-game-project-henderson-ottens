@@ -23,15 +23,19 @@ public class TitleScreen implements Screen{
         game = aGame;
         stage = new Stage(new ScreenViewport());
 
+        //game title label placed in the upper third of the screen
         Label title = new Label("Nordsoll Deep", GameRoot.gameSkin,"title");
         title.setAlignment(Align.center);
         title.setY(Gdx.graphics.getHeight()*2/3);
         title.setWidth(Gdx.graphics.getWidth());
         stage.addActor(title);
 
+        //play button that will send player to the GameScreen when pressed
         TextButton playButton = new TextButton("Play!",GameRoot.gameSkin);
         playButton.setWidth(Gdx.graphics.getWidth()/2);
         playButton.setPosition(Gdx.graphics.getWidth()/2-playButton.getWidth()/2,Gdx.graphics.getHeight()/2-playButton.getHeight()/2);
+
+        //Input listener disposes current screen and sets it to the appropriate one
         playButton.addListener(new InputListener(){
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
@@ -45,9 +49,12 @@ public class TitleScreen implements Screen{
         });
         stage.addActor(playButton);
 
+        //option button with input listener
         TextButton optionsButton = new TextButton("Options",GameRoot.gameSkin);
         optionsButton.setWidth(Gdx.graphics.getWidth()/2);
         optionsButton.setPosition(Gdx.graphics.getWidth()/2-optionsButton.getWidth()/2,Gdx.graphics.getHeight()/4-optionsButton.getHeight()/2);
+
+        //input listener disposes current screen and sets it to the appropriate one
         optionsButton.addListener(new InputListener(){
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
@@ -70,8 +77,11 @@ public class TitleScreen implements Screen{
 
     @Override
     public void render(float delta) {
+        //clear screen, teal color for improved aesthetic
         Gdx.gl.glClearColor(0, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        //draw everything on stage
         stage.act();
         stage.draw();
     }
