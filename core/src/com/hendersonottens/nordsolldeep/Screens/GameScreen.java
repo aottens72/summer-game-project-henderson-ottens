@@ -35,10 +35,13 @@ public class GameScreen implements Screen {
     private OrthogonalTiledMapRenderer tiledMapRenderer;
     private boolean flag = true;
     private SpriteBatch batch;
-    //private Sprite sprite;
+    //enemy sprite, temp
+    private Sprite enemySprite;
     private Player player;
     private MapLayer collisionLayer;
     private Body playerBody;
+    //temp, needs to eventually allow for more enemies
+    private Body enemyBody;
     private Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
     //private MapObjects objects;
     World world = new World(new Vector2(0, 0), true);
@@ -63,6 +66,8 @@ public class GameScreen implements Screen {
         batch = new SpriteBatch();
 
         //create player sprite and player object
+        enemySprite = new Sprite(new Texture("enemy.png"));
+        enemySprite.setBounds(500, 608, 32, 32);
         Sprite sprite = new Sprite(new Texture("player.png"));
         sprite.setBounds(64, 608, 32, 32);
         player = new Player(sprite);
@@ -115,6 +120,26 @@ public class GameScreen implements Screen {
         playerBody.setUserData(player.rectangle);
         bodies.add(playerBody);
         bodies.get(bodies.size - 1).createFixture(shape, 0);
+
+        //enemy now needs to have a collision box
+        def.position.x = (enemySprite.getX() + enemySprite.getWidth() / 2);
+        def.position.y = (enemySprite.getY() + enemySprite.getHeight() /2);
+        def.type = BodyDef.BodyType.KinematicBody;
+
+
+        shape.setAsBox(enemySprite.getWidth()/2, enemySprite.getHeight()/2);
+
+        enemyBody = world.createBody(def);
+
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = shape;
+        fixtureDef.isSensor = true;
+        Fixture fixture = enemyBody.createFixture(fixtureDef);
+        bodies.add(enemyBody);
+
+
+        shape.dispose();
+
     }
     public class CollisionListener implements ContactListener {
         @Override
@@ -139,6 +164,14 @@ public class GameScreen implements Screen {
             //if player body comes in contact with another body we want it to stop it's movement
             playerBody.setLinearVelocity(0f, 0f);
             System.out.print("collision");
+
+            //once player stops moving we want to check what the collision was with
+            //this is done using sensors
+            if(contact.getFixtureA().isSensor() || contact.getFixtureB().isSensor()){
+                //collision with a sensor, which is only enemy right now so switch to combat screen
+                game.getScreen().dispose();
+                game.setScreen(new CombatScreen(game));
+            }
         }
     };
 
@@ -217,6 +250,7 @@ public class GameScreen implements Screen {
         player.sprite.setPosition(playerBody.getPosition().x - 20, playerBody.getPosition().y - 15);
         //draw sprites
         batch.begin();
+        enemySprite.draw(batch);
         player.sprite.draw(batch);
         cameraController(camera);
         batch.end();
