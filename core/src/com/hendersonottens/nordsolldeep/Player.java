@@ -2,29 +2,36 @@ package com.hendersonottens.nordsolldeep;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.physics.box2d.Body;
 
 public class Player {
+
+    //player sprite
     public Sprite sprite;
-    public Rectangle rectangle;
+    //player body for collisions and movement
+    public Body playerBody;
+    //player health
+    public int currHP;
+    //player maximum health
+    public int MAX_HP;
+    //player level
+    public int currLevel;
+    //player experience points
+    public int currXP;
+
 
     public Player(Sprite aSprite){
+        //set sprite to passed in sprite
         sprite = aSprite;
-        rectangle = new Rectangle(sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight());
+        //body is set in GameScreen
+        //starting HP currently 50
+        currHP = 50;
+        MAX_HP = 50;
+        //start at level 1 with no experience
+        currLevel = 1;
+        currXP = 0;
     }
 
-    public void moveUp(){
-        sprite.setPosition(sprite.getX(), sprite.getY()+32);
-    }
 
-    public void moveDown(){
-        sprite.setPosition(sprite.getX(), sprite.getY()-32);
-    }
 
-    public void moveLeft(){
-        sprite.setPosition(sprite.getX()-32,sprite.getY());
-    }
-
-    public void moveRight(){
-        sprite.setPosition(sprite.getX()+32, sprite.getY());
-    }
 }

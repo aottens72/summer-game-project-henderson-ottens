@@ -39,6 +39,7 @@ public class TitleScreen implements Screen{
         playButton.addListener(new InputListener(){
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+                //maybe send to a screen where the player can select new game or continue, or have these buttons on the title screen instead of just play
                 game.getScreen().dispose();
                 game.setScreen(new GameScreen(game));
             }

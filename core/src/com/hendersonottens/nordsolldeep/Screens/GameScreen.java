@@ -12,7 +12,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
-import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -20,35 +19,48 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.hendersonottens.nordsolldeep.Player;
 
 
 //GameScreen contains all player movement and interactions
 public class GameScreen implements Screen {
-    private Stage stage;
+    //our GameRoot
+    //allows for changing of screens, essentially the core of the game
     private Game game;
+
+    //map is the current map being displayed
     private TiledMap map;
-    private OrthographicCamera camera;
+
+    //camera and tiledMapRenderer gives user vision
+    private OrthographicCamera camera = new OrthographicCamera();
     private OrthogonalTiledMapRenderer tiledMapRenderer;
     private boolean flag = true;
-    private SpriteBatch batch;
-    //enemy sprite, temp
-    private Sprite enemySprite;
-    private Player player;
+
+    //batch allows sprites to be drawn on the map
+    private SpriteBatch batch = new SpriteBatch();
+
+
+    protected Player player;
     private MapLayer collisionLayer;
-    private Body playerBody;
+    //body should probably be part of player object
+    //private Body playerBody;
+
+    //enemy sprite, temp
+    //will make an Enemy class and likely have a list of them
+    //each enemy will have health, damage, sprite, etc.
+    //Player objects will be similar
+    private Sprite enemySprite;
+    //protected Enemy enemy;
     //temp, needs to eventually allow for more enemies
     private Body enemyBody;
+
+    //debug renderer shows bodies, helps with tuning
     private Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
-    //private MapObjects objects;
     World world = new World(new Vector2(0, 0), true);
 
     public GameScreen(Game aGame) {
         game = aGame;
-        stage = new Stage(new ScreenViewport());
 
         //load in map from .tmx file created from Tiled
         map = new TmxMapLoader().load("maps/map1.tmx");
@@ -58,12 +70,6 @@ public class GameScreen implements Screen {
 
         //the map has a collision layer that contains objects indicating walls
         collisionLayer = map.getLayers().get("Collision Layer");
-        //objects = collisionLayer.getObjects();
-
-        //camera gives user vision
-        //batch allows sprites to be drawn on the map
-        camera = new OrthographicCamera();
-        batch = new SpriteBatch();
 
         //create player sprite and player object
         enemySprite = new Sprite(new Texture("enemy.png"));
@@ -85,6 +91,7 @@ public class GameScreen implements Screen {
     }
 
     //loadBodies function takes in the object layer that contains the bodies needed and the list to place them in
+    //bodies are what allow for our collisions
     public void loadBodies(MapLayer objects, Array<Body> bodies) {
 
         //def and shape will be used and adjusted to create boxes for all objects on the layer
@@ -107,18 +114,16 @@ public class GameScreen implements Screen {
                 bodies.get(bodies.size - 1).createFixture(shape, 0);
             }
         }
-        //player object contains a rectangle that encapsulates the player
-        Rectangle rect = player.rectangle;
 
-        def.position.x = (rect.x + rect.width / 2);
-        def.position.y = (rect.y + rect.height / 2);
+        //create a body rectangle around sprite
+        def.position.x = (player.sprite.getX() + player.sprite.getWidth() / 2);
+        def.position.y = (player.sprite.getY() + player.sprite.getHeight() / 2);
         def.type = BodyDef.BodyType.DynamicBody;
 
-        shape.setAsBox(rect.width / 2 , rect.height / 2 );
+        shape.setAsBox(player.sprite.getWidth() / 2 , player.sprite.getHeight() / 2 );
 
-        playerBody = world.createBody(def);
-        playerBody.setUserData(player.rectangle);
-        bodies.add(playerBody);
+        player.playerBody = world.createBody(def);
+        bodies.add(player.playerBody);
         bodies.get(bodies.size - 1).createFixture(shape, 0);
 
         //enemy now needs to have a collision box
@@ -134,13 +139,15 @@ public class GameScreen implements Screen {
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
         fixtureDef.isSensor = true;
-        Fixture fixture = enemyBody.createFixture(fixtureDef);
+        enemyBody.createFixture(fixtureDef);
         bodies.add(enemyBody);
 
 
         shape.dispose();
 
     }
+
+    //CollisionListener allows us to check for wall or enemy collisions, soon to be more
     public class CollisionListener implements ContactListener {
         @Override
         public void endContact(Contact contact) {
@@ -159,66 +166,74 @@ public class GameScreen implements Screen {
 
         @Override
         public void beginContact(Contact contact) {
-            //playerBody.setTransform(player.rectangle.x, player.rectangle.y, 0);
-            //playerBody.setAwake(true);
             //if player body comes in contact with another body we want it to stop it's movement
-            playerBody.setLinearVelocity(0f, 0f);
+            player.playerBody.setLinearVelocity(0f, 0f);
             System.out.print("collision");
 
             //once player stops moving we want to check what the collision was with
             //this is done using sensors
+            //unsure which fixture is which, so both are checked
             if(contact.getFixtureA().isSensor() || contact.getFixtureB().isSensor()){
                 //collision with a sensor, which is only enemy right now so switch to combat screen
+                //would like to create and run an animation once this occurs
+
+                //eventually there may be more sensors than just enemies, requiring different interactions
+                //think about how this may be done (thinking specific info tied to fixtures, an identifier)
+
+                //store screen for return post-combat
+                Screen currScreen = game.getScreen();
+                //dispose
                 game.getScreen().dispose();
-                game.setScreen(new CombatScreen(game));
+                //transition to new screen
+                game.setScreen(new CombatScreen((GameScreen) currScreen, game));
             }
         }
     };
 
-    //takes in reference to camera, moves spirte and camera upon button presses
+    //takes in reference to camera, moves sprite and camera upon button presses
     //called in the render function, the main loop
     private void cameraController(Camera aCamera){
-        Vector2 pos = playerBody.getPosition();
+        Vector2 pos = player.playerBody.getPosition();
 
         // apply left-down impulse
         if(Gdx.input.isKeyPressed(Input.Keys.A) && Gdx.input.isKeyPressed(Input.Keys.S)){
-            playerBody.applyLinearImpulse(-0.80f, -0.80f, pos.x, pos.y, true);
+            player.playerBody.applyLinearImpulse(-0.80f, -0.80f, pos.x, pos.y, true);
         }
         //apply left-up impulse
         else if(Gdx.input.isKeyPressed(Input.Keys.A) && Gdx.input.isKeyPressed(Input.Keys.W)){
-            playerBody.applyLinearImpulse(-0.80f, 0.80f, pos.x, pos.y, true);
+            player.playerBody.applyLinearImpulse(-0.80f, 0.80f, pos.x, pos.y, true);
         }
         //apply right-down impulse
         else if(Gdx.input.isKeyPressed(Input.Keys.D) && Gdx.input.isKeyPressed(Input.Keys.S)){
-            playerBody.applyLinearImpulse(0.80f, -0.80f, pos.x, pos.y, true);
+            player.playerBody.applyLinearImpulse(0.80f, -0.80f, pos.x, pos.y, true);
         }
         //apply right-up impulse
         else if(Gdx.input.isKeyPressed(Input.Keys.D) && Gdx.input.isKeyPressed(Input.Keys.W)){
-            playerBody.applyLinearImpulse(0.80f, 0.80f, pos.x, pos.y, true);
+            player.playerBody.applyLinearImpulse(0.80f, 0.80f, pos.x, pos.y, true);
         }
         //apply left impulse
         else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            playerBody.applyLinearImpulse(-0.80f, 0, pos.x, pos.y, true);
+            player.playerBody.applyLinearImpulse(-0.80f, 0, pos.x, pos.y, true);
         }
         // apply right impulse
         else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            playerBody.applyLinearImpulse(0.80f, 0, pos.x, pos.y, true);
+            player.playerBody.applyLinearImpulse(0.80f, 0, pos.x, pos.y, true);
         }
         // apply up impulse
         else if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            playerBody.applyLinearImpulse(0, 0.80f, pos.x, pos.y, true);
+            player.playerBody.applyLinearImpulse(0, 0.80f, pos.x, pos.y, true);
         }
         // apply down impulse
         else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            playerBody.applyLinearImpulse(0, -0.80f, pos.x, pos.y, true);
+            player.playerBody.applyLinearImpulse(0, -0.80f, pos.x, pos.y, true);
         }
         //stop movement if nothing pressed
         else{
-            playerBody.setLinearVelocity(0f, 0f);
+            player.playerBody.setLinearVelocity(0f, 0f);
         }
 
         //set camera location to where the playerBody aka the collision box is and update
-        aCamera.position.set(playerBody.getPosition().x, playerBody.getPosition().y, 0);
+        aCamera.position.set(player.playerBody.getPosition().x, player.playerBody.getPosition().y, 0);
         aCamera.update();
     }
 
@@ -228,15 +243,18 @@ public class GameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         //debug renderer is used to see where collision boxes are
+        //comment out unless in use
         //debugRenderer.render(world, camera.combined);
 
         //update world
         world.step(1/60f, 6, 2);
+
         //give player vision
         tiledMapRenderer.setView(camera);
         tiledMapRenderer.render();
         batch.setProjectionMatrix(camera.combined);
         camera.update();
+
         //flag is initialized to true so that this if statement only runs the first time render is called
         if(flag){
             flag = false;
@@ -245,9 +263,8 @@ public class GameScreen implements Screen {
         }
 
         //move player sprite and rectangle based on the position of its body
-        player.rectangle.setX(playerBody.getPosition().x);
-        player.rectangle.setY(playerBody.getPosition().y);
-        player.sprite.setPosition(playerBody.getPosition().x - 20, playerBody.getPosition().y - 15);
+        player.sprite.setPosition(player.playerBody.getPosition().x - 20, player.playerBody.getPosition().y - 15);
+
         //draw sprites
         batch.begin();
         enemySprite.draw(batch);
@@ -255,7 +272,6 @@ public class GameScreen implements Screen {
         cameraController(camera);
         batch.end();
 
-        //camera.update();
     }
 
     @Override
