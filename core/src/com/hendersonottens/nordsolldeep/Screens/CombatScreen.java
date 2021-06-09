@@ -23,8 +23,9 @@ public class CombatScreen implements Screen {
         stage = new Stage(new ScreenViewport());
         Image image = new Image(new Texture("menu-font-raw/pixthulhu.png"));
         Image image2 = new Image(new Texture("menu-font-raw/portrait.png"));
+        //image2.setFillParent(true);
         SplitPane pane = new SplitPane(image, image2, true, GameRoot.gameSkin);
-
+        pane.setFillParent(true);
         stage.addActor(pane);
     }
 
@@ -36,8 +37,11 @@ public class CombatScreen implements Screen {
     @Override
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
+        Texture background = new Texture("menu-font-raw/textfield.png");
         stage.act();
+        stage.getBatch().begin();
+        //stage.getBatch().draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()/2);
+        stage.getBatch().end();
         stage.draw();
     }
 
