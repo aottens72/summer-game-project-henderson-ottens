@@ -183,7 +183,11 @@ public class GameScreen implements Screen {
                 //store screen for return post-combat
                 Screen currScreen = game.getScreen();
                 //dispose
-                game.getScreen().dispose();
+                //crashes when this line is uncommented, unsure why
+                //we could use this to our advantage however
+                //not disposing the underlying game screen when switching to combat means we may not have to pass in the "currScreen" reference
+                //to the CombatScreen constructor
+                //game.getScreen().dispose();
                 //transition to new screen
                 game.setScreen(new CombatScreen((GameScreen) currScreen, game));
             }
