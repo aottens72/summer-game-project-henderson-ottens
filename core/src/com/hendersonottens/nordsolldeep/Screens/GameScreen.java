@@ -8,8 +8,7 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
@@ -21,6 +20,10 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 import com.hendersonottens.nordsolldeep.Player;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 
 //GameScreen contains all player movement and interactions
@@ -36,10 +39,17 @@ public class GameScreen implements Screen {
     private OrthographicCamera camera = new OrthographicCamera();
     private OrthogonalTiledMapRenderer tiledMapRenderer;
     private boolean flag = true;
-
+    private boolean movementFlag = false;
     //batch allows sprites to be drawn on the map
     private SpriteBatch batch = new SpriteBatch();
-
+    //texture atlas allows processing of a sprite sheet
+    public TextureAtlas playerMovement;
+    //an animation to run
+    public Animation<TextureRegion> idleAnimation;
+    //array of which parts of sprite sheet are a part of the idle animation
+    private String[] IDLE = new String[] {"1", "2", "3", "4"};
+    //initialize elapsed time
+    private float elapsedTime = 0;
 
     protected Player player;
     private MapLayer collisionLayer;
@@ -83,6 +93,15 @@ public class GameScreen implements Screen {
         loadBodies(collisionLayer, bodies);
         CollisionListener listener = new CollisionListener();
         world.setContactListener(listener);
+        //makes a texture region for the frames of the idle animation
+        TextureRegion[] idleFrames = new TextureRegion[IDLE.length];
+        //iterates through the images that are part of idle animation
+        for (int i = 0; i < IDLE.length ; i++){
+            String pathIdle = IDLE[i];
+            idleFrames[i] = playerMovement.findRegion(pathIdle);
+        }
+        //creates the animation with timing for how long each frame lasts
+        idleAnimation = new Animation<TextureRegion>(0.03125f,idleFrames);
     }
 
     @Override
@@ -239,6 +258,13 @@ public class GameScreen implements Screen {
         //set camera location to where the playerBody aka the collision box is and update
         aCamera.position.set(player.playerBody.getPosition().x, player.playerBody.getPosition().y, 0);
         aCamera.update();
+        //gets the current velocity of the player
+        Vector2 curV = player.playerBody.getLinearVelocity();
+        //checks if velocity is 0
+        if(curV.len() != 0){
+            //set flag
+            movementFlag = true;
+        }
     }
 
     @Override
@@ -268,14 +294,19 @@ public class GameScreen implements Screen {
 
         //move player sprite and rectangle based on the position of its body
         player.sprite.setPosition(player.playerBody.getPosition().x - 20, player.playerBody.getPosition().y - 15);
-
         //draw sprites
         batch.begin();
         enemySprite.draw(batch);
-        player.sprite.draw(batch);
+        //if flag not set, trigger idle animation
+        if(!movementFlag){
+            batch.draw(idleAnimation.getKeyFrame(0f, true), player.playerBody.getPosition().x,player.playerBody.getPosition().y,1.1F*0.675F,1.1F*1.6F);
+        }
+        else {
+            player.sprite.draw(batch);
+        }
         cameraController(camera);
         batch.end();
-
+        movementFlag = false;
     }
 
     @Override
