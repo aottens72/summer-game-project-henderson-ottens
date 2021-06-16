@@ -168,7 +168,7 @@ public class GameScreen implements Screen {
         public void beginContact(Contact contact) {
             //if player body comes in contact with another body we want it to stop it's movement
             player.playerBody.setLinearVelocity(0f, 0f);
-            System.out.print("collision");
+            System.out.println("collision");
 
             //once player stops moving we want to check what the collision was with
             //this is done using sensors
