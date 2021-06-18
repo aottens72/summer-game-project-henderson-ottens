@@ -116,7 +116,7 @@ public class CombatScreen implements Screen {
         Table table = new Table();
         table.setFillParent(true);
         table.setDebug(true);
-        table.add(attackList).colspan(2).align(left);
+        table.add(attackList).colspan(2).align(left).bottom();
         table.add(bagList).colspan(2).align(left);
         table.row();
         table.add(attackButton);
