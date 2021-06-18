@@ -103,6 +103,15 @@ public class CombatScreen implements Screen {
             }
         });
 
+        fleeButton.addListener(new ClickListener(){
+
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(prevScreen);
+            }
+        });
+
+
         attackList = new List(GameRoot.gameSkin);
         Array<String> attackListItems = new Array();
         attackListItems.add("Attack", "Defend");

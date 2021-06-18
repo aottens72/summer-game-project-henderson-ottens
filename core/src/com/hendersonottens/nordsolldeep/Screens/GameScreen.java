@@ -271,14 +271,14 @@ public class GameScreen implements Screen {
 
         //debug renderer is used to see where collision boxes are
         //comment out unless in use
-        debugRenderer.render(world, camera.combined);
+        //debugRenderer.render(world, camera.combined);
 
         //update world
         world.step(1/60f, 6, 2);
 
         //give player vision
-        //tiledMapRenderer.setView(camera);
-        //tiledMapRenderer.render();
+        tiledMapRenderer.setView(camera);
+        tiledMapRenderer.render();
         batch.setProjectionMatrix(camera.combined);
         camera.update();
 
