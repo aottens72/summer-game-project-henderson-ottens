@@ -8,8 +8,7 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
@@ -21,6 +20,10 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 import com.hendersonottens.nordsolldeep.Player;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 
 //GameScreen contains all player movement and interactions
@@ -36,10 +39,13 @@ public class GameScreen implements Screen {
     private OrthographicCamera camera = new OrthographicCamera();
     private OrthogonalTiledMapRenderer tiledMapRenderer;
     private boolean flag = true;
-
+    private boolean movementFlag = false;
     //batch allows sprites to be drawn on the map
     private SpriteBatch batch = new SpriteBatch();
+    //initialize elapsed time
+    private float elapsedTime = 0;
 
+    private float idleTime = 0f;
 
     protected Player player;
     private MapLayer collisionLayer;
@@ -116,11 +122,11 @@ public class GameScreen implements Screen {
         }
 
         //create a body rectangle around sprite
-        def.position.x = (player.sprite.getX() + player.sprite.getWidth() / 2);
+        def.position.x = (player.sprite.getX() + player.sprite.getWidth() / 2) -2;
         def.position.y = (player.sprite.getY() + player.sprite.getHeight() / 2);
         def.type = BodyDef.BodyType.DynamicBody;
 
-        shape.setAsBox(player.sprite.getWidth() / 2 , player.sprite.getHeight() / 2 );
+        shape.setAsBox((player.sprite.getWidth() / 2) -2  , (player.sprite.getHeight() / 2) -2 );
 
         player.playerBody = world.createBody(def);
         bodies.add(player.playerBody);
@@ -132,7 +138,7 @@ public class GameScreen implements Screen {
         def.type = BodyDef.BodyType.KinematicBody;
 
 
-        shape.setAsBox(enemySprite.getWidth()/2, enemySprite.getHeight()/2);
+        shape.setAsBox((enemySprite.getWidth()/2) - 2, (enemySprite.getHeight()/2) - 2);
 
         enemyBody = world.createBody(def);
 
@@ -201,35 +207,43 @@ public class GameScreen implements Screen {
 
         // apply left-down impulse
         if(Gdx.input.isKeyPressed(Input.Keys.A) && Gdx.input.isKeyPressed(Input.Keys.S)){
-            player.playerBody.applyLinearImpulse(-0.80f, -0.80f, pos.x, pos.y, true);
+            player.playerBody.setLinearVelocity(0f, 0f);
+            player.playerBody.applyLinearImpulse(-100f, -100f, pos.x, pos.y, true);
         }
         //apply left-up impulse
         else if(Gdx.input.isKeyPressed(Input.Keys.A) && Gdx.input.isKeyPressed(Input.Keys.W)){
-            player.playerBody.applyLinearImpulse(-0.80f, 0.80f, pos.x, pos.y, true);
+            player.playerBody.setLinearVelocity(0f, 0f);
+            player.playerBody.applyLinearImpulse(-100f, 100f, pos.x, pos.y, true);
         }
         //apply right-down impulse
         else if(Gdx.input.isKeyPressed(Input.Keys.D) && Gdx.input.isKeyPressed(Input.Keys.S)){
-            player.playerBody.applyLinearImpulse(0.80f, -0.80f, pos.x, pos.y, true);
+            player.playerBody.setLinearVelocity(0f, 0f);
+            player.playerBody.applyLinearImpulse(100f, -100f, pos.x, pos.y, true);
         }
         //apply right-up impulse
         else if(Gdx.input.isKeyPressed(Input.Keys.D) && Gdx.input.isKeyPressed(Input.Keys.W)){
-            player.playerBody.applyLinearImpulse(0.80f, 0.80f, pos.x, pos.y, true);
+            player.playerBody.setLinearVelocity(0f, 0f);
+            player.playerBody.applyLinearImpulse(100f, 100f, pos.x, pos.y, true);
         }
         //apply left impulse
         else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            player.playerBody.applyLinearImpulse(-0.80f, 0, pos.x, pos.y, true);
+            player.playerBody.setLinearVelocity(0f, 0f);
+            player.playerBody.applyLinearImpulse(-100f, 0, pos.x, pos.y, true);
         }
         // apply right impulse
         else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            player.playerBody.applyLinearImpulse(0.80f, 0, pos.x, pos.y, true);
+            player.playerBody.setLinearVelocity(0f, 0f);
+            player.playerBody.applyLinearImpulse(100f, 0, pos.x, pos.y, true);
         }
         // apply up impulse
         else if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            player.playerBody.applyLinearImpulse(0, 0.80f, pos.x, pos.y, true);
+            player.playerBody.setLinearVelocity(0f, 0f);
+            player.playerBody.applyLinearImpulse(0, 100f, pos.x, pos.y, true);
         }
         // apply down impulse
         else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            player.playerBody.applyLinearImpulse(0, -0.80f, pos.x, pos.y, true);
+            player.playerBody.setLinearVelocity(0f, 0f);
+            player.playerBody.applyLinearImpulse(0, -100f, pos.x, pos.y, true);
         }
         //stop movement if nothing pressed
         else{
@@ -239,6 +253,15 @@ public class GameScreen implements Screen {
         //set camera location to where the playerBody aka the collision box is and update
         aCamera.position.set(player.playerBody.getPosition().x, player.playerBody.getPosition().y, 0);
         aCamera.update();
+        //gets the current velocity of the player
+        Vector2 curV = player.playerBody.getLinearVelocity();
+        //checks if velocity is 0
+        if(curV.len() != 0){
+            //set flag
+            movementFlag = true;
+        }
+        else
+            movementFlag = false;
     }
 
     @Override
@@ -248,14 +271,14 @@ public class GameScreen implements Screen {
 
         //debug renderer is used to see where collision boxes are
         //comment out unless in use
-        //debugRenderer.render(world, camera.combined);
+        debugRenderer.render(world, camera.combined);
 
         //update world
         world.step(1/60f, 6, 2);
 
         //give player vision
-        tiledMapRenderer.setView(camera);
-        tiledMapRenderer.render();
+        //tiledMapRenderer.setView(camera);
+        //tiledMapRenderer.render();
         batch.setProjectionMatrix(camera.combined);
         camera.update();
 
@@ -268,14 +291,19 @@ public class GameScreen implements Screen {
 
         //move player sprite and rectangle based on the position of its body
         player.sprite.setPosition(player.playerBody.getPosition().x - 20, player.playerBody.getPosition().y - 15);
-
         //draw sprites
         batch.begin();
         enemySprite.draw(batch);
-        player.sprite.draw(batch);
+        //if flag not set, trigger idle animation
+        if(!movementFlag){
+            player.idleAnimation(batch, idleTime);
+            idleTime += Gdx.graphics.getDeltaTime();
+        }
+        else {
+            player.movementAnimation(batch);
+        }
         cameraController(camera);
         batch.end();
-
     }
 
     @Override
