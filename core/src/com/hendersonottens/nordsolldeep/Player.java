@@ -5,6 +5,9 @@ import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.physics.box2d.Body;
 
 public class Player {
+
+
+
     //texture atlas allows processing of a sprite sheet
     public TextureAtlas playerMovement = new TextureAtlas("player_animations.atlas");
     //atlas for combat animation
@@ -29,10 +32,12 @@ public class Player {
     //player experience points
     public int currXP;
 
+    public Inventory inventory;
+
 
     public Player(Sprite aSprite){
         movementFrame = playerMovement.findRegion("01");
-
+        inventory = new Inventory();
         //makes a texture region for the frames of the idle animation
         TextureRegion[] idleFrames = new TextureRegion[IDLE.length];
         TextureRegion[] idleCombatFrames = new TextureRegion[IDLE.length];
@@ -44,8 +49,8 @@ public class Player {
             idleCombatFrames[i] = combatMovement.findRegion(pathCombatIdle);
         }
         //creates the animation with timing for how long each frame lasts
-        idleAnimation = new Animation<TextureRegion>(1/2f,idleFrames);
-        combatAnimation = new Animation<TextureRegion>(1/2f, idleCombatFrames);
+        idleAnimation = new Animation<TextureRegion>(1/4f,idleFrames);
+        combatAnimation = new Animation<TextureRegion>(1/4f, idleCombatFrames);
         //set sprite to passed in sprite
         sprite = aSprite;
         //body is set in GameScreen

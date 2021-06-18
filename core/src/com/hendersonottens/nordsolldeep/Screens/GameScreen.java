@@ -35,6 +35,8 @@ public class GameScreen implements Screen {
     //map is the current map being displayed
     private TiledMap map;
 
+
+
     //camera and tiledMapRenderer gives user vision
     private OrthographicCamera camera = new OrthographicCamera();
     private OrthogonalTiledMapRenderer tiledMapRenderer;
@@ -204,6 +206,11 @@ public class GameScreen implements Screen {
     //called in the render function, the main loop
     private void cameraController(Camera aCamera){
         Vector2 pos = player.playerBody.getPosition();
+
+        if(Gdx.input.isKeyPressed(Input.Keys.I)){
+            Screen currScreen = game.getScreen();
+            game.setScreen(new PauseScreen((GameScreen) currScreen, game, player.inventory));
+        }
 
         // apply left-down impulse
         if(Gdx.input.isKeyPressed(Input.Keys.A) && Gdx.input.isKeyPressed(Input.Keys.S)){
