@@ -103,7 +103,7 @@ public class GameScreen implements Screen {
             idleFrames[i] = playerMovement.findRegion(pathIdle);
         }
         //creates the animation with timing for how long each frame lasts
-        idleAnimation = new Animation<TextureRegion>(0.03125f,idleFrames);
+        idleAnimation = new Animation<TextureRegion>(1/2f,idleFrames);
     }
 
     @Override
@@ -222,35 +222,43 @@ public class GameScreen implements Screen {
 
         // apply left-down impulse
         if(Gdx.input.isKeyPressed(Input.Keys.A) && Gdx.input.isKeyPressed(Input.Keys.S)){
-            player.playerBody.applyLinearImpulse(-0.80f, -0.80f, pos.x, pos.y, true);
+            player.playerBody.setLinearVelocity(0f, 0f);
+            player.playerBody.applyLinearImpulse(-100f, -100f, pos.x, pos.y, true);
         }
         //apply left-up impulse
         else if(Gdx.input.isKeyPressed(Input.Keys.A) && Gdx.input.isKeyPressed(Input.Keys.W)){
-            player.playerBody.applyLinearImpulse(-0.80f, 0.80f, pos.x, pos.y, true);
+            player.playerBody.setLinearVelocity(0f, 0f);
+            player.playerBody.applyLinearImpulse(-100f, 100f, pos.x, pos.y, true);
         }
         //apply right-down impulse
         else if(Gdx.input.isKeyPressed(Input.Keys.D) && Gdx.input.isKeyPressed(Input.Keys.S)){
-            player.playerBody.applyLinearImpulse(0.80f, -0.80f, pos.x, pos.y, true);
+            player.playerBody.setLinearVelocity(0f, 0f);
+            player.playerBody.applyLinearImpulse(100f, -100f, pos.x, pos.y, true);
         }
         //apply right-up impulse
         else if(Gdx.input.isKeyPressed(Input.Keys.D) && Gdx.input.isKeyPressed(Input.Keys.W)){
-            player.playerBody.applyLinearImpulse(0.80f, 0.80f, pos.x, pos.y, true);
+            player.playerBody.setLinearVelocity(0f, 0f);
+            player.playerBody.applyLinearImpulse(100f, 100f, pos.x, pos.y, true);
         }
         //apply left impulse
         else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            player.playerBody.applyLinearImpulse(-0.80f, 0, pos.x, pos.y, true);
+            player.playerBody.setLinearVelocity(0f, 0f);
+            player.playerBody.applyLinearImpulse(-100f, 0, pos.x, pos.y, true);
         }
         // apply right impulse
         else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            player.playerBody.applyLinearImpulse(0.80f, 0, pos.x, pos.y, true);
+            player.playerBody.setLinearVelocity(0f, 0f);
+            player.playerBody.applyLinearImpulse(100f, 0, pos.x, pos.y, true);
         }
         // apply up impulse
         else if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            player.playerBody.applyLinearImpulse(0, 0.80f, pos.x, pos.y, true);
+            player.playerBody.setLinearVelocity(0f, 0f);
+            player.playerBody.applyLinearImpulse(0, 100f, pos.x, pos.y, true);
         }
         // apply down impulse
         else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            player.playerBody.applyLinearImpulse(0, -0.80f, pos.x, pos.y, true);
+            player.playerBody.setLinearVelocity(0f, 0f);
+            player.playerBody.applyLinearImpulse(0, -100f, pos.x, pos.y, true);
         }
         //stop movement if nothing pressed
         else{
@@ -267,6 +275,8 @@ public class GameScreen implements Screen {
             //set flag
             movementFlag = true;
         }
+        else
+            movementFlag = false;
     }
 
     @Override
@@ -305,11 +315,10 @@ public class GameScreen implements Screen {
             idleTime += Gdx.graphics.getDeltaTime();
         }
         else {
-            player.sprite.draw(batch);
+            batch.draw(idleAnimation.getKeyFrame(0f, false), player.playerBody.getPosition().x - 20, player.playerBody.getPosition().y - 15,player.sprite.getWidth(), player.sprite.getHeight());
         }
         cameraController(camera);
         batch.end();
-        movementFlag = false;
     }
 
     @Override
