@@ -42,12 +42,6 @@ public class GameScreen implements Screen {
     private boolean movementFlag = false;
     //batch allows sprites to be drawn on the map
     private SpriteBatch batch = new SpriteBatch();
-    //texture atlas allows processing of a sprite sheet
-    public TextureAtlas playerMovement = new TextureAtlas("player_animations.atlas");
-    //an animation to run
-    public Animation<TextureRegion> idleAnimation;
-    //array of which parts of sprite sheet are a part of the idle animation
-    private String[] IDLE = new String[] {"01", "02", "03", "04"};
     //initialize elapsed time
     private float elapsedTime = 0;
 
@@ -95,15 +89,6 @@ public class GameScreen implements Screen {
         loadBodies(collisionLayer, bodies);
         CollisionListener listener = new CollisionListener();
         world.setContactListener(listener);
-        //makes a texture region for the frames of the idle animation
-        TextureRegion[] idleFrames = new TextureRegion[IDLE.length];
-        //iterates through the images that are part of idle animation
-        for (int i = 0; i < IDLE.length ; i++){
-            String pathIdle = IDLE[i];
-            idleFrames[i] = playerMovement.findRegion(pathIdle);
-        }
-        //creates the animation with timing for how long each frame lasts
-        idleAnimation = new Animation<TextureRegion>(1/2f,idleFrames);
     }
 
     @Override
@@ -137,11 +122,11 @@ public class GameScreen implements Screen {
         }
 
         //create a body rectangle around sprite
-        def.position.x = (player.sprite.getX() + player.sprite.getWidth() / 2);
+        def.position.x = (player.sprite.getX() + player.sprite.getWidth() / 2) -2;
         def.position.y = (player.sprite.getY() + player.sprite.getHeight() / 2);
         def.type = BodyDef.BodyType.DynamicBody;
 
-        shape.setAsBox(player.sprite.getWidth() / 2 , player.sprite.getHeight() / 2 );
+        shape.setAsBox((player.sprite.getWidth() / 2) -2  , (player.sprite.getHeight() / 2) -2 );
 
         player.playerBody = world.createBody(def);
         bodies.add(player.playerBody);
@@ -153,7 +138,7 @@ public class GameScreen implements Screen {
         def.type = BodyDef.BodyType.KinematicBody;
 
 
-        shape.setAsBox(enemySprite.getWidth()/2, enemySprite.getHeight()/2);
+        shape.setAsBox((enemySprite.getWidth()/2) - 2, (enemySprite.getHeight()/2) - 2);
 
         enemyBody = world.createBody(def);
 
@@ -286,14 +271,14 @@ public class GameScreen implements Screen {
 
         //debug renderer is used to see where collision boxes are
         //comment out unless in use
-        //debugRenderer.render(world, camera.combined);
+        debugRenderer.render(world, camera.combined);
 
         //update world
         world.step(1/60f, 6, 2);
 
         //give player vision
-        tiledMapRenderer.setView(camera);
-        tiledMapRenderer.render();
+        //tiledMapRenderer.setView(camera);
+        //tiledMapRenderer.render();
         batch.setProjectionMatrix(camera.combined);
         camera.update();
 
@@ -311,11 +296,11 @@ public class GameScreen implements Screen {
         enemySprite.draw(batch);
         //if flag not set, trigger idle animation
         if(!movementFlag){
-            batch.draw(idleAnimation.getKeyFrame(idleTime, true), player.playerBody.getPosition().x - 20,player.playerBody.getPosition().y - 15,player.sprite.getWidth(), player.sprite.getHeight());
+            player.idleAnimation(batch, idleTime);
             idleTime += Gdx.graphics.getDeltaTime();
         }
         else {
-            batch.draw(idleAnimation.getKeyFrame(0f, false), player.playerBody.getPosition().x - 20, player.playerBody.getPosition().y - 15,player.sprite.getWidth(), player.sprite.getHeight());
+            player.movementAnimation(batch);
         }
         cameraController(camera);
         batch.end();
