@@ -195,7 +195,7 @@ public class GameScreen implements Screen {
                 //to the CombatScreen constructor
                 //game.getScreen().dispose();
                 //transition to new screen
-                game.setScreen(new CombatScreen((GameScreen) currScreen, game));
+                game.setScreen(new CombatScreen((GameScreen) currScreen, game, player));
             }
         }
     };

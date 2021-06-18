@@ -7,8 +7,12 @@ import com.badlogic.gdx.physics.box2d.Body;
 public class Player {
     //texture atlas allows processing of a sprite sheet
     public TextureAtlas playerMovement = new TextureAtlas("player_animations.atlas");
+    //atlas for combat animation
+    public TextureAtlas combatMovement = new TextureAtlas("player_combat_animations.atlas");
     //an animation for idle player
     public Animation<TextureRegion> idleAnimation;
+    //animation played during combat
+    public Animation<TextureRegion> combatAnimation;
     //array of which parts of sprite sheet are a part of the idle animation
     private String[] IDLE = new String[] {"01", "02", "03", "04"};
     private TextureRegion movementFrame;
@@ -31,13 +35,17 @@ public class Player {
 
         //makes a texture region for the frames of the idle animation
         TextureRegion[] idleFrames = new TextureRegion[IDLE.length];
+        TextureRegion[] idleCombatFrames = new TextureRegion[IDLE.length];
         //iterates through the images that are part of idle animation
         for (int i = 0; i < IDLE.length ; i++){
             String pathIdle = IDLE[i];
+            String pathCombatIdle = IDLE[i];
             idleFrames[i] = playerMovement.findRegion(pathIdle);
+            idleCombatFrames[i] = combatMovement.findRegion(pathCombatIdle);
         }
         //creates the animation with timing for how long each frame lasts
         idleAnimation = new Animation<TextureRegion>(1/2f,idleFrames);
+        combatAnimation = new Animation<TextureRegion>(1/2f, idleCombatFrames);
         //set sprite to passed in sprite
         sprite = aSprite;
         //body is set in GameScreen
@@ -57,4 +65,7 @@ public class Player {
         batch.draw(movementFrame, playerBody.getPosition().x -20, playerBody.getPosition().y - 15, sprite.getWidth(), sprite.getHeight());
     }
 
+    public void combatIdleAnimation(Batch batch, float time){
+        batch.draw(combatAnimation.getKeyFrame(time, true), sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight());
+    }
 }

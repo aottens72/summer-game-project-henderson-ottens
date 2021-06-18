@@ -13,48 +13,25 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.hendersonottens.nordsolldeep.GameRoot;
+import com.hendersonottens.nordsolldeep.Player;
 
 import static com.badlogic.gdx.utils.Align.left;
 
 public class CombatScreen implements Screen {
-
-//    private class ButtonClickListener extends ClickListener{
-//
-//        public ButtonClickListener() {
-//            super();
-//        }
-//
-//        @Override
-//        public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-//            System.out.println("works");
-//            list.setVisible(true);
-//        }
-//
-//        @Override
-//        public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-//            System.out.println("works exit");
-//            if (toActor != list){
-//                list.setVisible(false);
-//            }
-//        }
-//
-//        @Override
-//        public void clicked(InputEvent event, float x, float y) {
-//            System.out.println("clicked");
-//        }
-//    }
 
     private Game game;
     private GameScreen prevScreen;
     private Stage stage;
     private List attackList;
     private List bagList;
+    protected Player player;
+    private float deltaTime = 0f;
 
-    public CombatScreen(GameScreen screen, Game aGame){
+    public CombatScreen(GameScreen screen, Game aGame, Player thePlayer){
         prevScreen = screen;
         game = aGame;
         stage = new Stage(new ScreenViewport());
-
+        player = thePlayer;
         TextButton attackButton = new TextButton("Attack", GameRoot.gameSkin);
         TextButton defendButton = new TextButton("Defend", GameRoot.gameSkin);
         TextButton bagButton = new TextButton("Bag", GameRoot.gameSkin);
@@ -110,28 +87,30 @@ public class CombatScreen implements Screen {
                 game.setScreen(prevScreen);
             }
         });
-
-
+        //GameRoot.gameSkin.getFont("font").getData().setScale(0.5f, 0.5f);
         attackList = new List(GameRoot.gameSkin);
         Array<String> attackListItems = new Array();
         attackListItems.add("Attack", "Defend");
         attackList.setItems(attackListItems);
         attackList.setVisible(false);
+        attackList.getStyle().font = GameRoot.gameSkin.getFont("font");
         bagList = new List(GameRoot.gameSkin);
+        bagList.getStyle().font = GameRoot.gameSkin.getFont("font");
+
         Array<String> bagListItems = new Array();
         bagListItems.add("Potion", "Suspicious Fruit", "Sanity Pills");
         bagList.setItems(bagListItems);
         bagList.setVisible(false);
         Table table = new Table();
         table.setFillParent(true);
-        table.setDebug(true);
-        table.add(attackList).colspan(2).align(left).bottom();
+        //table.setDebug(true);
+        table.add(attackList).colspan(2).align(left).bottom().padLeft(20f);
         table.add(bagList).colspan(2).align(left);
         table.row();
-        table.add(attackButton);
-        table.add(defendButton);
-        table.add(bagButton);
-        table.add(fleeButton);
+        table.add(attackButton).padRight(10f).padLeft(20f);
+        table.add(defendButton).padRight(10f);
+        table.add(bagButton).left().padRight(10f);
+        table.add(fleeButton).align(left);
         table.bottom().left();
         stage.addActor(table);
 
@@ -146,10 +125,13 @@ public class CombatScreen implements Screen {
     @Override
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        player.sprite.setPosition(650, 240);
         Texture background = new Texture("background/battle-background-sunny-hillsx1.png");
         stage.act();
         stage.getBatch().begin();
         stage.getBatch().draw(background, 0, 0, 800, 480);
+        player.combatIdleAnimation(stage.getBatch(), deltaTime);
+        deltaTime += Gdx.graphics.getDeltaTime();
         stage.getBatch().end();
         stage.draw();
     }
