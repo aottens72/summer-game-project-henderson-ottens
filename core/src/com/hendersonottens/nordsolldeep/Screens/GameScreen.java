@@ -43,13 +43,15 @@ public class GameScreen implements Screen {
     //batch allows sprites to be drawn on the map
     private SpriteBatch batch = new SpriteBatch();
     //texture atlas allows processing of a sprite sheet
-    public TextureAtlas playerMovement;
+    public TextureAtlas playerMovement = new TextureAtlas("player_animations.atlas");
     //an animation to run
     public Animation<TextureRegion> idleAnimation;
     //array of which parts of sprite sheet are a part of the idle animation
-    private String[] IDLE = new String[] {"1", "2", "3", "4"};
+    private String[] IDLE = new String[] {"01", "02", "03", "04"};
     //initialize elapsed time
     private float elapsedTime = 0;
+
+    private float idleTime = 0f;
 
     protected Player player;
     private MapLayer collisionLayer;
@@ -299,7 +301,8 @@ public class GameScreen implements Screen {
         enemySprite.draw(batch);
         //if flag not set, trigger idle animation
         if(!movementFlag){
-            batch.draw(idleAnimation.getKeyFrame(0f, true), player.playerBody.getPosition().x,player.playerBody.getPosition().y,1.1F*0.675F,1.1F*1.6F);
+            batch.draw(idleAnimation.getKeyFrame(idleTime, true), player.playerBody.getPosition().x - 20,player.playerBody.getPosition().y - 15,player.sprite.getWidth(), player.sprite.getHeight());
+            idleTime += Gdx.graphics.getDeltaTime();
         }
         else {
             player.sprite.draw(batch);
