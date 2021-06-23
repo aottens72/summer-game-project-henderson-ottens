@@ -88,7 +88,7 @@ public class CombatScreen implements Screen {
                 game.setScreen(prevScreen);
             }
         });
-        //GameRoot.gameSkin.getFont("font").getData().setScale(0.5f, 0.5f);
+        GameRoot.gameSkin.getFont("subtitle").getData().setScale(0.5f, 0.5f);
         attackList = new List(GameRoot.gameSkin);
         Array<String> attackListItems = new Array();
         attackListItems.add("Attack", "Defend");
@@ -99,19 +99,18 @@ public class CombatScreen implements Screen {
         bagList.getStyle().font = GameRoot.gameSkin.getFont("font");
 
         Array<String> bagListItems = new Array();
-        bagListItems.add("Potion", "Suspicious Fruit", "Sanity Pills");
-        bagList.setItems(bagListItems);
+        bagList.setItems(player.inventory.consumables);
         bagList.setVisible(false);
         Table table = new Table();
-        table.setFillParent(true);
-        //table.setDebug(true);
-        table.add(attackList).colspan(2).align(left).bottom().padLeft(20f);
-        table.add(bagList).colspan(2).align(left);
+        //table.setFillParent(true);
+        table.setDebug(true);
+        table.add(attackList).colspan(2).minWidth(600/2f).padLeft(100f);
+        table.add(bagList).colspan(2).minWidth(600/2f).padRight(100f);
         table.row();
-        table.add(attackButton).padRight(10f).padLeft(20f);
-        table.add(defendButton).padRight(10f);
-        table.add(bagButton).left().padRight(10f);
-        table.add(fleeButton).align(left);
+        table.add(attackButton).minWidth(600/4f).prefHeight(25).padLeft(100f);
+        table.add(defendButton).minWidth(600/4f).prefHeight(25);
+        table.add(bagButton).minWidth(600/4f).prefHeight(25);
+        table.add(fleeButton).minWidth(600/4f).prefHeight(25).padRight(100f);
         table.bottom().left();
         stage.addActor(table);
 
