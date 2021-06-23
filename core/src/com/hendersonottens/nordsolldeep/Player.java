@@ -38,6 +38,12 @@ public class Player {
     public Player(Sprite aSprite){
         movementFrame = playerMovement.findRegion("01");
         inventory = new Inventory();
+        inventory.add("1 gold", "item");
+        inventory.add("stick", "weapon");
+        inventory.add("shirt", "armor");
+        inventory.add("health potion", "consumable");
+        inventory.add("tome of deep knowledge", "tome");
+        inventory.add("key", "key item");
         //makes a texture region for the frames of the idle animation
         TextureRegion[] idleFrames = new TextureRegion[IDLE.length];
         TextureRegion[] idleCombatFrames = new TextureRegion[IDLE.length];
