@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.hendersonottens.nordsolldeep.GameRoot;
 
@@ -21,7 +22,7 @@ public class OptionScreen implements Screen {
 
     public OptionScreen(Game aGame) {
         game = aGame;
-        stage = new Stage(new ScreenViewport());
+        stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 
         //Options label in upper third of screen
         Label options = new Label("Options", GameRoot.gameSkin, "subtitle");

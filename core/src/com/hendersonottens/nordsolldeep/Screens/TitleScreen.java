@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.hendersonottens.nordsolldeep.GameRoot;
 
@@ -21,7 +22,7 @@ public class TitleScreen implements Screen{
 
     public TitleScreen(Game aGame) {
         game = aGame;
-        stage = new Stage(new ScreenViewport());
+        stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 
         //game title label placed in the upper third of the screen
         Label title = new Label("Nordsoll Deep", GameRoot.gameSkin,"title");

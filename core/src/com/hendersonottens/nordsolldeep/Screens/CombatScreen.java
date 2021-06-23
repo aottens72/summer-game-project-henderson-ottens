@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.hendersonottens.nordsolldeep.GameRoot;
 import com.hendersonottens.nordsolldeep.Player;
@@ -30,7 +31,7 @@ public class CombatScreen implements Screen {
     public CombatScreen(GameScreen screen, Game aGame, Player thePlayer){
         prevScreen = screen;
         game = aGame;
-        stage = new Stage(new ScreenViewport());
+        stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
         player = thePlayer;
         TextButton attackButton = new TextButton("Attack", GameRoot.gameSkin);
         TextButton defendButton = new TextButton("Defend", GameRoot.gameSkin);

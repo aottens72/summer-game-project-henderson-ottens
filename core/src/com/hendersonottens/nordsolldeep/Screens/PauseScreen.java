@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.hendersonottens.nordsolldeep.GameRoot;
 import com.hendersonottens.nordsolldeep.Inventory;
@@ -56,7 +57,7 @@ public class PauseScreen implements Screen {
         inventory = theInventory;
 
         //create stage on which all the UI will be
-        stage = new Stage(new ScreenViewport());
+        stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 
         //inventory container should allow us to switch between our sub-inventory lists
         inventoryContainer = new Container();
@@ -66,7 +67,7 @@ public class PauseScreen implements Screen {
         //horizontalGroup holds main tabs, meaning Inventory, party, and system
         HorizontalGroup horizontalGroup = new HorizontalGroup();
         //horizontalGroup.setDebug(true);
-        horizontalGroup.setBounds(0, 370, 800, 100);
+        horizontalGroup.setBounds(0, Gdx.graphics.getHeight()-100, 800, 100);
         GameRoot.gameSkin.getFont("subtitle").getData().setScale(0.5f);
         inventoryButton = new TextButton("Inventory", GameRoot.gameSkin);
         partyButton = new TextButton("Party", GameRoot.gameSkin);
