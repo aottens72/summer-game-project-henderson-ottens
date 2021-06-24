@@ -5,11 +5,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -103,17 +105,41 @@ public class CombatScreen implements Screen {
         bagList.setVisible(false);
         Table table = new Table();
         //table.setFillParent(true);
-        table.setDebug(true);
-        table.add(attackList).colspan(2).minWidth(600/2f).padLeft(100f);
-        table.add(bagList).colspan(2).minWidth(600/2f).padRight(100f);
+        //table.setDebug(true);
+        table.add(attackList).colspan(2).minWidth(600/2f);
+        table.add(bagList).colspan(2).minWidth(600/2f);
         table.row();
-        table.add(attackButton).minWidth(600/4f).prefHeight(25).padLeft(100f);
+        table.add(attackButton).minWidth(600/4f).prefHeight(25);
         table.add(defendButton).minWidth(600/4f).prefHeight(25);
         table.add(bagButton).minWidth(600/4f).prefHeight(25);
-        table.add(fleeButton).minWidth(600/4f).prefHeight(25).padRight(100f);
+        table.add(fleeButton).minWidth(600/4f).prefHeight(25);
         table.bottom().left();
         stage.addActor(table);
 
+
+
+//        VerticalGroup verticalGroup = new VerticalGroup();
+//        verticalGroup.setDebug(true);
+//        verticalGroup.setBounds(Gdx.graphics.getWidth() - 200, 0, 200, 250);
+        TextureRegionDrawable textureBar = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("menu-font-raw/progress-bar-health-knob.png"))));
+        TextureRegionDrawable background = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("menu-font-raw/progress-bar-health.png"))));
+        ProgressBar.ProgressBarStyle barStyle = new ProgressBar.ProgressBarStyle(background, textureBar);
+        barStyle.knobBefore = barStyle.knob;
+        barStyle.knobBefore.setLeftWidth(0);
+        barStyle.knobBefore.setRightWidth(0);
+        barStyle.background.setLeftWidth(0);
+        barStyle.background.setRightWidth(0);
+        barStyle.knob.setMinWidth(50);
+        ProgressBar playerHealthBar = new ProgressBar(0f, (float)player.MAX_HP, 1f, false, barStyle);
+
+        playerHealthBar.setDebug(true);
+        playerHealthBar.getStyle().background.setMinWidth(50);
+        playerHealthBar.setBounds(0, 100, 200, 50);
+        playerHealthBar.setValue(player.currHP);
+
+        //playerHealthBar.setFillParent(true);
+        //verticalGroup.addActor(playerHealthBar);
+        stage.addActor(playerHealthBar);
     }
 
     @Override
