@@ -297,7 +297,7 @@ public class GameScreen implements Screen {
         }
 
         //move player sprite and rectangle based on the position of its body
-        player.sprite.setPosition(player.playerBody.getPosition().x - 20, player.playerBody.getPosition().y - 15);
+        player.sprite.setBounds(player.playerBody.getPosition().x - 20, player.playerBody.getPosition().y - 15, 32, 32);
         //draw sprites
         batch.begin();
         enemySprite.draw(batch);

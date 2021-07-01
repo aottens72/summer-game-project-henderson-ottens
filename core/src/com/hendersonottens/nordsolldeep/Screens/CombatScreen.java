@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.hendersonottens.nordsolldeep.GameRoot;
 import com.hendersonottens.nordsolldeep.Player;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar.ProgressBarStyle;
 
 import static com.badlogic.gdx.utils.Align.left;
 
@@ -100,12 +101,18 @@ public class CombatScreen implements Screen {
         bagList = new List(GameRoot.gameSkin);
         bagList.getStyle().font = GameRoot.gameSkin.getFont("font");
 
+        (GameRoot.gameSkin.get("health", ProgressBarStyle.class)).knobBefore = GameRoot.gameSkin.getTiledDrawable("progress-bar-health-knob");
+        ProgressBar playerHealthBar = new ProgressBar(0.0f, player.MAX_HP, 1.0f, false, GameRoot.gameSkin, "health");
+        playerHealthBar.setValue(0);
+        playerHealthBar.updateVisualValue();
+        //playerHealthBar.setFillParent(true);
+
         Array<String> bagListItems = new Array();
         bagList.setItems(player.inventory.consumables);
         bagList.setVisible(false);
         Table table = new Table();
         //table.setFillParent(true);
-        //table.setDebug(true);
+        table.setDebug(true);
         table.add(attackList).colspan(2).minWidth(600/2f);
         table.add(bagList).colspan(2).minWidth(600/2f);
         table.row();
@@ -113,33 +120,10 @@ public class CombatScreen implements Screen {
         table.add(defendButton).minWidth(600/4f).prefHeight(25);
         table.add(bagButton).minWidth(600/4f).prefHeight(25);
         table.add(fleeButton).minWidth(600/4f).prefHeight(25);
+        table.add(playerHealthBar).size(420, 50);
         table.bottom().left();
         stage.addActor(table);
 
-
-
-//        VerticalGroup verticalGroup = new VerticalGroup();
-//        verticalGroup.setDebug(true);
-//        verticalGroup.setBounds(Gdx.graphics.getWidth() - 200, 0, 200, 250);
-        TextureRegionDrawable textureBar = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("menu-font-raw/progress-bar-health-knob.png"))));
-        TextureRegionDrawable background = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("menu-font-raw/progress-bar-health.png"))));
-        ProgressBar.ProgressBarStyle barStyle = new ProgressBar.ProgressBarStyle(background, textureBar);
-        barStyle.knobBefore = barStyle.knob;
-        barStyle.knobBefore.setLeftWidth(0);
-        barStyle.knobBefore.setRightWidth(0);
-        barStyle.background.setLeftWidth(0);
-        barStyle.background.setRightWidth(0);
-        barStyle.knob.setMinWidth(50);
-        ProgressBar playerHealthBar = new ProgressBar(0f, (float)player.MAX_HP, 1f, false, barStyle);
-
-        playerHealthBar.setDebug(true);
-        playerHealthBar.getStyle().background.setMinWidth(50);
-        playerHealthBar.setBounds(0, 100, 200, 50);
-        playerHealthBar.setValue(player.currHP);
-
-        //playerHealthBar.setFillParent(true);
-        //verticalGroup.addActor(playerHealthBar);
-        stage.addActor(playerHealthBar);
     }
 
     @Override
@@ -151,11 +135,11 @@ public class CombatScreen implements Screen {
     @Override
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        player.sprite.setPosition(650, 240);
+        player.sprite.setBounds(Gdx.graphics.getWidth()*.9f, Gdx.graphics.getHeight()/2f, 50, 50);
         Texture background = new Texture("background/battle-background-sunny-hillsx1.png");
         stage.act();
         stage.getBatch().begin();
-        stage.getBatch().draw(background, 0, 0, 800, 480);
+        stage.getBatch().draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         player.combatIdleAnimation(stage.getBatch(), deltaTime);
         deltaTime += Gdx.graphics.getDeltaTime();
         stage.getBatch().end();

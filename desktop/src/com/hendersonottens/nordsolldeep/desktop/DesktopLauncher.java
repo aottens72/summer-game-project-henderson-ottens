@@ -11,7 +11,7 @@ public class DesktopLauncher {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		//config.setFullscreenMode(primaryMode);
 		config.setTitle("Nordsoll Deep");
-		config.setWindowedMode(800,480);
+		config.setWindowedMode(1024,800);
 		new Lwjgl3Application(new GameRoot(), config);
 	}
 }
