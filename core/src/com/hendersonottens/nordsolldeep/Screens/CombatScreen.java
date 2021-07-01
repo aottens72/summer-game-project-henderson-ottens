@@ -101,10 +101,16 @@ public class CombatScreen implements Screen {
         bagList = new List(GameRoot.gameSkin);
         bagList.getStyle().font = GameRoot.gameSkin.getFont("font");
 
-        (GameRoot.gameSkin.get("health", ProgressBarStyle.class)).knobBefore = GameRoot.gameSkin.getTiledDrawable("progress-bar-health-knob");
-        ProgressBar playerHealthBar = new ProgressBar(0.0f, player.MAX_HP, 1.0f, false, GameRoot.gameSkin, "health");
-        playerHealthBar.setValue(0);
-        playerHealthBar.updateVisualValue();
+        Array<String> partyListItems = new Array<>();
+        partyListItems.add("Player\t\t" + player.currHP + "/" + player.MAX_HP);
+        List partyList = new List(GameRoot.gameSkin);
+        partyList.setItems(partyListItems);
+
+
+//        (GameRoot.gameSkin.get("health", ProgressBarStyle.class)).knobBefore = GameRoot.gameSkin.getTiledDrawable("progress-bar-health-knob");
+//        ProgressBar playerHealthBar = new ProgressBar(0.0f, player.MAX_HP, 1.0f, false, GameRoot.gameSkin, "health");
+//        playerHealthBar.setValue(0);
+//        playerHealthBar.updateVisualValue();
         //playerHealthBar.setFillParent(true);
 
         Array<String> bagListItems = new Array();
@@ -112,7 +118,7 @@ public class CombatScreen implements Screen {
         bagList.setVisible(false);
         Table table = new Table();
         //table.setFillParent(true);
-        table.setDebug(true);
+        //table.setDebug(true);
         table.add(attackList).colspan(2).minWidth(600/2f);
         table.add(bagList).colspan(2).minWidth(600/2f);
         table.row();
@@ -120,10 +126,11 @@ public class CombatScreen implements Screen {
         table.add(defendButton).minWidth(600/4f).prefHeight(25);
         table.add(bagButton).minWidth(600/4f).prefHeight(25);
         table.add(fleeButton).minWidth(600/4f).prefHeight(25);
-        table.add(playerHealthBar).size(420, 50);
         table.bottom().left();
         stage.addActor(table);
 
+        partyList.setBounds(Gdx.graphics.getWidth()/1.7f,0, Gdx.graphics.getWidth()/2.5f, Gdx.graphics.getHeight()/3f);
+        stage.addActor(partyList);
     }
 
     @Override
