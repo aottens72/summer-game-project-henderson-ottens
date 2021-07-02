@@ -62,7 +62,10 @@ public class CombatScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if(attackList.getSelected() == "Sword Slash"){
-                    combat.attackFlag = true;
+                    synchronized (combat){
+                        combat.attackFlag = true;
+                        combat.notifyAll();
+                    }
                 }
             }
         });

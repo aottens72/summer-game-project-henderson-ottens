@@ -22,6 +22,11 @@ public class Combat{
 
     public void playerTurn(){
         while(!attackFlag && !defendFlag && !bagFlag){
+            try {
+                this.wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             System.out.println("stuck here");
         }
         if(attackFlag){
