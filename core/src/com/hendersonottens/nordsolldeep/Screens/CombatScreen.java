@@ -5,25 +5,22 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.hendersonottens.nordsolldeep.Combat;
 import com.hendersonottens.nordsolldeep.GameRoot;
 import com.hendersonottens.nordsolldeep.GenericEnemy;
 import com.hendersonottens.nordsolldeep.Player;
-import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar.ProgressBarStyle;
-
-import static com.badlogic.gdx.utils.Align.left;
 
 public class CombatScreen implements Screen {
+
+    public boolean attackFlag = false;
+    public boolean defendFlag = false;
+    public boolean bagFlag = false;
 
     private Game game;
     private GameScreen prevScreen;
@@ -32,6 +29,7 @@ public class CombatScreen implements Screen {
     private List bagList;
     protected Player player;
     private float deltaTime = 0f;
+    private GenericEnemy enemy = new GenericEnemy();
 
     public CombatScreen(GameScreen screen, Game aGame, Player thePlayer){
 
@@ -40,7 +38,7 @@ public class CombatScreen implements Screen {
         stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
         player = thePlayer;
 
-        final Combat combat = new Combat(player, new GenericEnemy());
+        //final Combat combat = new Combat(player, new GenericEnemy());
 
         TextButton attackButton = new TextButton("Attack", GameRoot.gameSkin);
         TextButton defendButton = new TextButton("Defend", GameRoot.gameSkin);
@@ -62,10 +60,7 @@ public class CombatScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if(attackList.getSelected() == "Sword Slash"){
-                    synchronized (combat){
-                        combat.attackFlag = true;
-                        combat.notifyAll();
-                    }
+                   attackFlag = true;
                 }
             }
         });
@@ -142,6 +137,7 @@ public class CombatScreen implements Screen {
 
         partyList.setBounds(Gdx.graphics.getWidth()/1.7f,0, Gdx.graphics.getWidth()/2.5f, Gdx.graphics.getHeight()/3f);
         stage.addActor(partyList);
+
     }
 
     @Override
@@ -162,6 +158,8 @@ public class CombatScreen implements Screen {
         deltaTime += Gdx.graphics.getDeltaTime();
         stage.getBatch().end();
         stage.draw();
+
+        combatLoop();
     }
 
     @Override
@@ -187,6 +185,40 @@ public class CombatScreen implements Screen {
     @Override
     public void dispose() {
 
+    }
+
+    public void playerTurn(){
+        if(attackFlag){
+            System.out.println("Entered attack, things are going well");
+        } else if (defendFlag){
+
+        } else if(bagFlag){
+
+        }
+        else{
+            System.out.println("made it here");
+        }
+    }
+    public void enemyTurn(){
+        System.out.println("in enemyTurn");
+    }
+
+    public void combatLoop() {
+        while (player.currHP != 0 || enemy.curr_hp != 0) {
+            if (enemy.speedStat > player.speedStat) {
+
+            } else if (player.speedStat > enemy.speedStat) {
+
+            } else {
+                if (Math.random() % 2 == 0) {
+                    playerTurn();
+                    enemyTurn();
+                } else {
+                    enemyTurn();
+                    playerTurn();
+                }
+            }
+        }
     }
 
 }
