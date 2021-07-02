@@ -21,6 +21,7 @@ public class CombatScreen implements Screen {
     public boolean attackFlag = false;
     public boolean defendFlag = false;
     public boolean bagFlag = false;
+    public boolean inCombat = false;
 
     private Game game;
     private GameScreen prevScreen;
@@ -59,8 +60,15 @@ public class CombatScreen implements Screen {
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                attackFlag = true;
                 if(attackList.getSelected() == "Sword Slash"){
-                   attackFlag = true;
+                    System.out.println("it was sword slash");
+                }
+                else{
+                    System.out.println("it was shield bash");
+                }
+                if(inCombat){
+                    playerTurn();
                 }
             }
         });
@@ -68,7 +76,7 @@ public class CombatScreen implements Screen {
         defendButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){
-                System.out.println("clicked");
+
             }
         });
 
@@ -159,7 +167,9 @@ public class CombatScreen implements Screen {
         stage.getBatch().end();
         stage.draw();
 
-        combatLoop();
+        if(!inCombat){
+            combatLoop();
+        }
     }
 
     @Override
@@ -190,35 +200,32 @@ public class CombatScreen implements Screen {
     public void playerTurn(){
         if(attackFlag){
             System.out.println("Entered attack, things are going well");
+            //do attack
+            enemyTurn();
         } else if (defendFlag){
 
         } else if(bagFlag){
 
         }
-        else{
-            System.out.println("made it here");
-        }
+
     }
     public void enemyTurn(){
         System.out.println("in enemyTurn");
     }
 
     public void combatLoop() {
-        while (player.currHP != 0 || enemy.curr_hp != 0) {
-            if (enemy.speedStat > player.speedStat) {
+        if (enemy.speedStat > player.speedStat) {
 
-            } else if (player.speedStat > enemy.speedStat) {
-
+        } else if (player.speedStat > enemy.speedStat) {
+            inCombat = true;
+        } else {
+            if (Math.random() % 2 == 0) {
+                inCombat = true;
             } else {
-                if (Math.random() % 2 == 0) {
-                    playerTurn();
-                    enemyTurn();
-                } else {
-                    enemyTurn();
-                    playerTurn();
-                }
+                enemyTurn();
+                inCombat = true;
             }
         }
     }
-
 }
+
