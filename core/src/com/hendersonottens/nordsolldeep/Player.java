@@ -31,6 +31,11 @@ public class Player {
     public int currLevel;
     //player experience points
     public int currXP;
+    public int levelUpThreshold;
+
+    public int attackStat = 10; //adds stat to attack as percentage
+    public int defenseStat = 10; //100 blocks 99% | rest matches stat (for now)
+    public int speedStat = 10; //this could be like pokemon, you and enemy have speed stats and higher goes first. coin flip if tied
 
     public Inventory inventory;
 
@@ -38,12 +43,12 @@ public class Player {
     public Player(Sprite aSprite){
         movementFrame = playerMovement.findRegion("01");
         inventory = new Inventory();
-        inventory.add("1 gold", "item");
-        inventory.add("stick", "weapon");
-        inventory.add("shirt", "armor");
-        inventory.add("health potion", "consumable");
-        inventory.add("tome of deep knowledge", "tome");
-        inventory.add("key", "key item");
+        inventory.add("1 Gold", "item");
+        inventory.add("Stick", "weapon");
+        inventory.add("Shirt", "armor");
+        inventory.add("Health Potion", "consumable");
+        inventory.add("Tome of Deep Knowledge", "tome");
+        inventory.add("Key", "key item");
         //makes a texture region for the frames of the idle animation
         TextureRegion[] idleFrames = new TextureRegion[IDLE.length];
         TextureRegion[] idleCombatFrames = new TextureRegion[IDLE.length];
@@ -78,5 +83,9 @@ public class Player {
 
     public void combatIdleAnimation(Batch batch, float time){
         batch.draw(combatAnimation.getKeyFrame(time, true), sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight());
+    }
+
+    public void levelUp(){
+
     }
 }

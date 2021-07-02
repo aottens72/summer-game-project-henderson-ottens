@@ -15,7 +15,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.hendersonottens.nordsolldeep.Combat;
 import com.hendersonottens.nordsolldeep.GameRoot;
+import com.hendersonottens.nordsolldeep.GenericEnemy;
 import com.hendersonottens.nordsolldeep.Player;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar.ProgressBarStyle;
 
@@ -32,10 +34,14 @@ public class CombatScreen implements Screen {
     private float deltaTime = 0f;
 
     public CombatScreen(GameScreen screen, Game aGame, Player thePlayer){
+
         prevScreen = screen;
         game = aGame;
         stage = new Stage(new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
         player = thePlayer;
+
+        final Combat combat = new Combat(player, new GenericEnemy());
+
         TextButton attackButton = new TextButton("Attack", GameRoot.gameSkin);
         TextButton defendButton = new TextButton("Defend", GameRoot.gameSkin);
         TextButton bagButton = new TextButton("Bag", GameRoot.gameSkin);
@@ -55,7 +61,9 @@ public class CombatScreen implements Screen {
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
-
+                if(attackList.getSelected() == "Sword Slash"){
+                    combat.attackFlag = true;
+                }
             }
         });
 
@@ -94,7 +102,7 @@ public class CombatScreen implements Screen {
         GameRoot.gameSkin.getFont("subtitle").getData().setScale(0.5f, 0.5f);
         attackList = new List(GameRoot.gameSkin);
         Array<String> attackListItems = new Array();
-        attackListItems.add("Attack", "Defend");
+        attackListItems.add("Sword Slash", "Shield Bash");
         attackList.setItems(attackListItems);
         attackList.setVisible(false);
         attackList.getStyle().font = GameRoot.gameSkin.getFont("font");
