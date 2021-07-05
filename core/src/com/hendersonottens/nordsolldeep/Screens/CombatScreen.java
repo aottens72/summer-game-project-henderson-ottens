@@ -23,6 +23,11 @@ public class CombatScreen implements Screen {
     public boolean bagFlag = false;
     public boolean inCombat = false;
 
+    protected double playerAttackValue = 0.0;
+    protected double enemyAttackValue = 0.0;
+    protected boolean playerIsDefending = false;
+    protected boolean enemyIsDefending = false;
+
     private Game game;
     private GameScreen prevScreen;
     private Stage stage;
@@ -31,6 +36,9 @@ public class CombatScreen implements Screen {
     protected Player player;
     private float deltaTime = 0f;
     private GenericEnemy enemy = new GenericEnemy();
+
+    protected Array<String> partyListItems;
+    protected List partyList;
 
     public CombatScreen(GameScreen screen, Game aGame, Player thePlayer){
 
@@ -60,14 +68,16 @@ public class CombatScreen implements Screen {
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                attackFlag = true;
-                if(attackList.getSelected() == "Sword Slash"){
-                    System.out.println("it was sword slash");
-                }
-                else{
-                    System.out.println("it was shield bash");
-                }
                 if(inCombat){
+                    attackFlag = true;
+                    if(attackList.getSelected() == "Sword Slash"){
+                        System.out.println("it was sword slash");
+                        playerAttackValue = 2.0 * player.attackStat;
+                    }
+                    else{
+                        System.out.println("it was shield bash");
+                        playerAttackValue = 1.5 * player.attackStat;
+                    }
                     playerTurn();
                 }
             }
@@ -76,7 +86,10 @@ public class CombatScreen implements Screen {
         defendButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){
-
+                if(inCombat){
+                    defendFlag = true;
+                    playerTurn();
+                }
             }
         });
 
@@ -94,7 +107,10 @@ public class CombatScreen implements Screen {
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
-
+                if(inCombat){
+                    bagFlag = true;
+                    playerTurn();
+                }
             }
         });
 
@@ -102,9 +118,21 @@ public class CombatScreen implements Screen {
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(prevScreen);
+                if(player.speedStat > enemy.speedStat){
+                    game.setScreen(prevScreen);
+                }
+                else if(player.speedStat == enemy.speedStat){
+                    if(Math.random() % 2 == 0)
+                        game.setScreen(prevScreen);
+                }
+                else{
+                    if(Math.random() % 4 == 0)
+                        game.setScreen(prevScreen);
+                }
             }
         });
+
+
         GameRoot.gameSkin.getFont("subtitle").getData().setScale(0.5f, 0.5f);
         attackList = new List(GameRoot.gameSkin);
         Array<String> attackListItems = new Array();
@@ -115,9 +143,9 @@ public class CombatScreen implements Screen {
         bagList = new List(GameRoot.gameSkin);
         bagList.getStyle().font = GameRoot.gameSkin.getFont("font");
 
-        Array<String> partyListItems = new Array<>();
+        partyListItems = new Array<>();
         partyListItems.add("Player\t\t" + player.currHP + "/" + player.MAX_HP);
-        List partyList = new List(GameRoot.gameSkin);
+        partyList = new List(GameRoot.gameSkin);
         partyList.setItems(partyListItems);
 
 
@@ -159,6 +187,11 @@ public class CombatScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         player.sprite.setBounds(Gdx.graphics.getWidth()*.9f, Gdx.graphics.getHeight()/2f, 50, 50);
         Texture background = new Texture("background/battle-background-sunny-hillsx1.png");
+
+        partyListItems.clear();
+        partyListItems.add("Player\t\t" + player.currHP + "/" + player.MAX_HP);
+        partyList.setItems(partyListItems);
+
         stage.act();
         stage.getBatch().begin();
         stage.getBatch().draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -201,16 +234,62 @@ public class CombatScreen implements Screen {
         if(attackFlag){
             System.out.println("Entered attack, things are going well");
             //do attack
+            if(enemyIsDefending){
+                enemyIsDefending = false;
+                enemy.curr_hp -= playerAttackValue * (1 - enemy.defenseStat/(double)(100 + enemy.defenseStat));
+            }
+            else{
+                enemy.curr_hp -= playerAttackValue;
+            }
+            attackFlag = false;
+            System.out.println(enemy.curr_hp);
             enemyTurn();
         } else if (defendFlag){
-
+            playerIsDefending = true;
+            defendFlag = false;
+            enemyTurn();
         } else if(bagFlag){
-
+            bagFlag = false;
+            enemyTurn();
         }
 
     }
     public void enemyTurn(){
+        if(enemy.curr_hp / (double)enemy.MAX_HP > 0.5){
+            System.out.println("entering");
+            if(Math.random() % 10 == 0){
+                enemyIsDefending = true;
+            }
+            else{
+                System.out.println("enemy attack");
+                //enemy attacks instead of defending
+                enemyAttackValue = enemy.attackStat;
+                if(playerIsDefending){
+                    playerIsDefending = false;
+                    player.currHP -= enemyAttackValue * (1 - (player.defenseStat/(double)(100 + player.defenseStat)));
+                }
+                else{
+                    player.currHP -= enemyAttackValue;
+                }
+            }
+        }
+        else{
+            if(Math.random() % 4 == 0){
+                enemyIsDefending = true;
+            }
+            else{
+                //enemy attacks instead of defending
+                enemyAttackValue = 1.5 * enemyAttackValue;
+                if(playerIsDefending){
+                    player.currHP -= enemyAttackValue * (1 - player.defenseStat/(100 + player.defenseStat));
+                }
+                else{
+                    player.currHP -= enemyAttackValue;
+                }
+            }
+        }
         System.out.println("in enemyTurn");
+        System.out.println(player.currHP);
     }
 
     public void combatLoop() {
